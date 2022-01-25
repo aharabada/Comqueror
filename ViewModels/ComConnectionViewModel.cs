@@ -44,6 +44,10 @@ public class ComConnectionViewModel : PropertyNotifier
         2_000_000
     };
 
+    private List<int> _dataBits = new() { 5, 6, 7, 8 };
+
+    public List<int> AvailableDataBits => _dataBits;
+
     private ComPortModel? _comPortSettings;
 
     //private bool _isConnected;

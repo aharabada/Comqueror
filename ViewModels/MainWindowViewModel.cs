@@ -1,7 +1,10 @@
 ﻿using Comqueror.Models;
+using Comqueror.Properties;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.IO.Ports;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -9,92 +12,170 @@ namespace Comqueror.ViewModels;
 
 public class MainWindowViewModel : PropertyNotifier
 {
-    private ComPortModel _comPortSettings;
+    private ComPortModel _hostComPortSettings;
+    private ComPortModel _deviceComPortSettings;
 
-    private ComConnectionViewModel _comConnectionViewModel;
+    private ComConnectionViewModel _hostComConnectionViewModel;
+    private ComConnectionViewModel _deviceComConnectionViewModel;
 
-    private bool _isConnected;
+    private bool _isHostConnected, _isDeviceConnected;
 
-    public bool IsConnected
+    public bool IsHostConnected
     {
-        get => _isConnected;
-        set => SetIfChanged(ref _isConnected, value);
+        get => _isHostConnected;
+        set => SetIfChanged(ref _isHostConnected, value);
     }
 
-    private SerialPort _comPort = new();
-
-    public ComPortModel ComPortSettings
+    public bool IsDeviceConnected
     {
-        get => _comPortSettings;
-        set => SetIfChanged(ref _comPortSettings, value);
+        get => _isDeviceConnected;
+        set => SetIfChanged(ref _isDeviceConnected, value);
     }
 
-    public ComConnectionViewModel ComConnectionViewModel
+    private SerialPort _hostComPort = new();
+    private SerialPort _deviceComPort = new();
+
+    public ComPortModel HostComPortSettings
     {
-        get => _comConnectionViewModel;
-        set => SetIfChanged(ref _comConnectionViewModel, value);
+        get => _hostComPortSettings;
+        set => SetIfChanged(ref _hostComPortSettings, value);
+    }
+    public ComPortModel DeviceComPortSettings
+    {
+        get => _deviceComPortSettings;
+        set => SetIfChanged(ref _deviceComPortSettings, value);
     }
 
-    private RelayCommand? _connectCommand;
+    public ComConnectionViewModel HostComConnectionViewModel
+    {
+        get => _hostComConnectionViewModel;
+        set => SetIfChanged(ref _hostComConnectionViewModel, value);
+    }
+    public ComConnectionViewModel DeviceComConnectionViewModel
+    {
+        get => _deviceComConnectionViewModel;
+        set => SetIfChanged(ref _deviceComConnectionViewModel, value);
+    }
 
-    public RelayCommand ConnectCommand => _connectCommand ??= new(async (o) => await Connect(o));
+    private RelayCommand? _connectHostCommand;
+    private RelayCommand? _connectDeviceCommand;
+
+    public RelayCommand ConnectHostCommand => _connectHostCommand ??=
+        new(async (o) =>
+        {
+            IsHostConnected = await Connect(_hostComPortSettings, _hostComPort);
+        });
+    public RelayCommand ConnectDeviceCommand => _connectDeviceCommand ??= 
+        new(async (o) =>
+        {
+            IsDeviceConnected = await Connect(_deviceComPortSettings, _deviceComPort);
+        });
 
     public MainWindowViewModel()
     {
-        ComConnectionViewModel = new ComConnectionViewModel();
+        HostComConnectionViewModel = new ComConnectionViewModel();
+        DeviceComConnectionViewModel = new ComConnectionViewModel();
 
-        _comPortSettings = new ComPortModel();
-        LoadSettings(_comPortSettings);
+        _hostComPortSettings = new ComPortModel();
+        _deviceComPortSettings = new ComPortModel();
+        LoadSettings(_hostComPortSettings, _deviceComPortSettings);
 
-        ComConnectionViewModel.ComPortSettings = _comPortSettings;
+        HostComConnectionViewModel.ComPortSettings = _hostComPortSettings;
+        DeviceComConnectionViewModel.ComPortSettings = _deviceComPortSettings;
     }
 
-    private void LoadSettings(ComPortModel comPortSettings)
+    private struct SettingsContainer
     {
-        string? lastComPort = Properties.Settings.Default.ComConnection_LastComPort;
+        public string ComPort;
+        public int BaudRate;
+        public string Parity;
+        public int DataBits;
+        public string StopBits;
+        public string Handshake;
 
-        if (!string.IsNullOrWhiteSpace(lastComPort) && ComConnectionViewModel.PortNames.Contains(lastComPort))
+        public void FillComPortModel(ComPortModel comPortModel, IEnumerable<string> comPortNames)
         {
-            comPortSettings.PortName = lastComPort;
-        }
-        else
-        {
-            comPortSettings.PortName = ComConnectionViewModel.PortNames[0];
-        }
+            if (!string.IsNullOrWhiteSpace(ComPort) && comPortNames.Contains(ComPort))
+                comPortModel.PortName = ComPort;
+            else
+                comPortModel.PortName = comPortNames.FirstOrDefault();
 
-        int lastBaudRate = Properties.Settings.Default.ComConnection_LastBaudRate;
-        comPortSettings.BaudRate = lastBaudRate;
+            comPortModel.BaudRate = BaudRate;
+
+            comPortModel.Parity = Enum.TryParse(Parity, out Parity parity) ? parity : System.IO.Ports.Parity.None;
+
+            comPortModel.DataBits = DataBits;
+
+            comPortModel.StopBits = Enum.TryParse(StopBits, out StopBits stopBits) ? stopBits : System.IO.Ports.StopBits.One;
+
+            comPortModel.Handshake = Enum.TryParse(Handshake, out Handshake handshake) ? handshake : System.IO.Ports.Handshake.None;
+        }
     }
 
-    private async Task Connect(object o)
+    private void LoadSettings(ComPortModel hostComPortSettings, ComPortModel deviceComPortSettings)
     {
-        if (_comPort.IsOpen)
+        SettingsContainer lastHostPortSettings = new()
         {
-            _comPort.Close();
-            IsConnected = false;
-            //ComConnectionViewModel.IsConnected = false;
-            return;
+            ComPort = Settings.Default.HostComConnection_LastComPort,
+            BaudRate = Settings.Default.HostComConnection_LastBaudRate,
+            Parity = Settings.Default.HostComConnection_LastParity,
+            DataBits = Settings.Default.HostComConnection_LastDataBits,
+            StopBits = Settings.Default.HostComConnection_LastStoppBits,
+            Handshake = Settings.Default.HostComConnection_LastHandshake
+        };
+
+        lastHostPortSettings.FillComPortModel(hostComPortSettings, HostComConnectionViewModel.PortNames);
+
+        SettingsContainer lastDevicePortSettings = new()
+        {
+            ComPort = Settings.Default.DeviceComConnection_LastComPort,
+            BaudRate = Settings.Default.DeviceComConnection_LastBaudRate,
+            Parity = Settings.Default.DeviceComConnection_LastParity,
+            DataBits = Settings.Default.DeviceComConnection_LastDataBits,
+            StopBits = Settings.Default.DeviceComConnection_LastStoppBits,
+            Handshake = Settings.Default.DeviceComConnection_LastHandshake
+        };
+
+        lastDevicePortSettings.FillComPortModel(deviceComPortSettings, DeviceComConnectionViewModel.PortNames);
+    }
+
+    private async Task<bool> Connect(ComPortModel comPortSettings, SerialPort serialPort)
+    {
+        if (serialPort.IsOpen)
+        {
+            // Sollte der Port sich nicht schließen lassen -> RlComStreamAnalyzer.RlComControl.RlComControl.cs:void disConnect()
+            serialPort.Close();
+
+            return false;
         }
 
-        if (string.IsNullOrWhiteSpace(_comPortSettings.PortName))
+        if (string.IsNullOrWhiteSpace(comPortSettings.PortName))
         {
             MessageBox.Show("No Com Port selected.", "Connection Failed", MessageBoxButton.OK, MessageBoxImage.Error);
-            return;
+
+            return false;
         }
 
-        _comPort.PortName = "COM1";//_comPortSettings.PortName;
-        _comPort.BaudRate = _comPortSettings.BaudRate;
+        serialPort.PortName = comPortSettings.PortName;
+        serialPort.BaudRate = comPortSettings.BaudRate;
+        serialPort.Parity = comPortSettings.Parity;
+        serialPort.DataBits = comPortSettings.DataBits;
+        serialPort.StopBits = comPortSettings.StopBits;
+        serialPort.Handshake = comPortSettings.Handshake;
+        //serialPort.BreakState = ...
         // TODO: More settings
 
         try
         {
-            _comPort.Open();
-            IsConnected = true;
-            //ComConnectionViewModel.IsConnected = true;
+            serialPort.Open();
+
+            return true;
         }
         catch (Exception ex)
         {
             MessageBox.Show(ex.Message, "Connection Failed", MessageBoxButton.OK, MessageBoxImage.Error);
+
+            return false;
         }
     }
 }

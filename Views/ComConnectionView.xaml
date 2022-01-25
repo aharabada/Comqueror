@@ -26,10 +26,9 @@
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         
         <!--Row 1-->
@@ -43,16 +42,8 @@
             </b:Interaction.Triggers>
         </ComboBox>
 
-        <TextBlock Grid.Column="2" Grid.Row="0" Margin="5" VerticalAlignment="Center" Text="{x:Static p:Strings.Label_Parity}"/>
-        <ComboBox Grid.Column="3" Grid.Row="0" Margin="5" 
-                  SelectedValue="{Binding ComPortSettings.Parity, Converter={StaticResource EnumToStringConverter}}"
-                  ItemsSource="{util:Enumerate {x:Type ports:Parity}}">
-
-        </ComboBox>
-
-            <!--Row 2-->
-        <TextBlock Grid.Column="0" Grid.Row="1" Margin="5" VerticalAlignment="Center" Text="{x:Static p:Strings.Label_Baudrate}"/>
-        <DockPanel Grid.Column="1" Grid.Row="1" LastChildFill="True" Margin="5">
+        <TextBlock Grid.Column="2" Grid.Row="0" Margin="5" VerticalAlignment="Center" Text="{x:Static p:Strings.Label_Baudrate}"/>
+        <DockPanel Grid.Column="3" Grid.Row="0" LastChildFill="True" Margin="5">
             <ComboBox Height="20" Name="CbBaudRate" IsEditable="True"
                   SelectedItem="{Binding ComPortSettings.BaudRate}" ItemsSource="{Binding BaudRates}">
                 <ComboBox.ItemTemplate>
@@ -62,28 +53,77 @@
                         </StackPanel>
                     </DataTemplate>
                 </ComboBox.ItemTemplate>
-                <ComboBox.Style>
-                    <Style>
-                        
-                    </Style>
-                </ComboBox.Style>
             </ComboBox>
         </DockPanel>
+
+        <!--Row 2-->
+        <Expander Grid.Column="0" Grid.ColumnSpan="4" Grid.Row="1" Header="{x:Static p:Strings.Header_More}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <!--Expander Row 1-->
+                <TextBlock Grid.Column="0" Grid.Row="0" Margin="5" VerticalAlignment="Center" Text="{x:Static p:Strings.Label_Parity}"/>
+                <ComboBox Grid.Column="1" Grid.Row="0" Margin="5" 
+                            SelectedValue="{Binding ComPortSettings.Parity, Converter={StaticResource EnumToStringConverter}}"
+                            ItemsSource="{util:Enumerate {x:Type ports:Parity}}"/>
+
+                <TextBlock Grid.Column="2" Grid.Row="0" Margin="5" VerticalAlignment="Center" Text="{x:Static p:Strings.Label_Databits}"/>
+                <ComboBox Grid.Column="3" Grid.Row="0" Margin="5" 
+                            SelectedValue="{Binding ComPortSettings.DataBits}"
+                            ItemsSource="{Binding AvailableDataBits}"/>
+
+                <!--Expander Row 2-->
+                <TextBlock Grid.Column="0" Grid.Row="1" Margin="5" VerticalAlignment="Center" Text="{x:Static p:Strings.Label_StopBits}"/>
+                <ComboBox Grid.Column="1" Grid.Row="1" Margin="5" 
+                            SelectedValue="{Binding ComPortSettings.StopBits, Converter={StaticResource EnumToStringConverter}}"
+                            ItemsSource="{util:Enumerate {x:Type ports:StopBits}}"/>
+
+                <TextBlock Grid.Column="2" Grid.Row="1" Margin="5" VerticalAlignment="Center" Text="{x:Static p:Strings.Label_Handshake}"/>
+                <ComboBox Grid.Column="3" Grid.Row="1" Margin="5" 
+                            SelectedValue="{Binding ComPortSettings.Handshake, Converter={StaticResource EnumToStringConverter}}"
+                            ItemsSource="{util:Enumerate {x:Type ports:Handshake}}"/>
+            </Grid>
+        </Expander>
+
         <!--Row 3-->
-        <TextBlock Grid.Column="0" Grid.Row="2" Margin="5" VerticalAlignment="Center">Baudrate:</TextBlock>
-        <!--Row 4-->
-        <Button Grid.ColumnSpan="2" Grid.Row="3" Margin="20 5" VerticalAlignment="Center" 
-                Command="{Binding BlaConnectCommand, 
-                    RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:ComConnectionView}}}">
+        <TextBlock Grid.Column="0" Grid.Row="2" Margin="5" VerticalAlignment="Center" Text="{x:Static p:Strings.Label_Status}"/>
+        <TextBlock Grid.Column="1" Grid.Row="2" Margin="5" Padding="10 5" VerticalAlignment="Center" TextAlignment="Center" FontWeight="Bold" HorizontalAlignment="Left">
+            <TextBlock.Style>
+                <Style TargetType="{x:Type TextBlock}">
+                    <Setter Property="Text" Value="{x:Static p:Strings.Status_Disconnected}"/>
+                    <Setter Property="Background" Value="Red"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsConnected, 
+                            RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:ComConnectionView}}}" Value="True">
+                            <Setter Property="Text" Value="{x:Static p:Strings.Status_Connected}"/>
+                            <Setter Property="Background" Value="Lime"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </TextBlock.Style>
+        </TextBlock>
+
+        <Button Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="2" Margin="20 5" VerticalAlignment="Center" 
+                        Command="{Binding ConnectCommand, 
+                            RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:ComConnectionView}}}">
             <Button.Style>
                 <Style TargetType="{x:Type Button}">
                     <Style.Triggers>
                         <DataTrigger Binding="{Binding IsConnected, 
-                    RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:ComConnectionView}}}" Value="False">
-                            <Setter Property="Content" Value="Connect"/>
+                            RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:ComConnectionView}}}" Value="False">
+                            <Setter Property="Content" Value="{x:Static p:Strings.Button_Connect}"/>
                         </DataTrigger>
                     </Style.Triggers>
-                    <Setter Property="Content" Value="Disconnect"/>
+                    <Setter Property="Content" Value="{x:Static p:Strings.Button_Disconnect}"/>
                 </Style>
             </Button.Style>
         </Button>

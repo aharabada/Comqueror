@@ -124,4 +124,49 @@
   <data name="Enum_Parity.None" xml:space="preserve">
     <value>Keine</value>
   </data>
+  <data name="MainWindow_Title" xml:space="preserve">
+    <value>Comqueror</value>
+  </data>
+  <data name="Button_Connect" xml:space="preserve">
+    <value>Verbinden</value>
+  </data>
+  <data name="Button_Disconnect" xml:space="preserve">
+    <value>Trennen</value>
+  </data>
+  <data name="Label_Databits" xml:space="preserve">
+    <value>Datenbits:</value>
+  </data>
+  <data name="Label_StopBits" xml:space="preserve">
+    <value>Stopp Bits:</value>
+  </data>
+  <data name="Enum_StopBits.One" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="Enum_StopBits.OnePointFive" xml:space="preserve">
+    <value>1,5</value>
+  </data>
+  <data name="Enum_StopBits.Two" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="Enum_StopBits.None" xml:space="preserve">
+    <value>Keine</value>
+  </data>
+  <data name="Enum_Handshake.None" xml:space="preserve">
+    <value>Nein</value>
+  </data>
+  <data name="Label_Handshake" xml:space="preserve">
+    <value>Handshake:</value>
+  </data>
+  <data name="Header_More" xml:space="preserve">
+    <value>Mehr</value>
+  </data>
+  <data name="Label_Status" xml:space="preserve">
+    <value>Status:</value>
+  </data>
+  <data name="Status_Connected" xml:space="preserve">
+    <value>Verbunden</value>
+  </data>
+  <data name="Status_Disconnected" xml:space="preserve">
+    <value>Getrennt</value>
+  </data>
 </root>

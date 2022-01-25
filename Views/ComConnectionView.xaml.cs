@@ -22,22 +22,22 @@ namespace Comqueror.Views;
 /// </summary>
 public partial class ComConnectionView : UserControl
 {
-    public static readonly DependencyProperty BlaConnectCommandProperty =
+    public static readonly DependencyProperty ConnectCommandProperty =
         DependencyProperty.Register(
-            "BlaConnectCommand",
+            nameof(ConnectCommand),
             typeof(ICommand),
             typeof(ComConnectionView),
             new UIPropertyMetadata(null));
 
-    public ICommand BlaConnectCommand
+    public ICommand ConnectCommand
     {
-        get => (ICommand)GetValue(BlaConnectCommandProperty);
-        set => SetValue(BlaConnectCommandProperty, value);
+        get => (ICommand)GetValue(ConnectCommandProperty);
+        set => SetValue(ConnectCommandProperty, value);
     }
 
     public static readonly DependencyProperty IsConnectedProperty =
         DependencyProperty.Register(
-            "IsConnected",
+            nameof(IsConnected),
             typeof(bool),
             typeof(ComConnectionView),
             new UIPropertyMetadata(null));

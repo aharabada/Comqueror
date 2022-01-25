@@ -2,11 +2,41 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Comqueror.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="ComConnection_LastComPort" Type="System.String" Scope="User">
+    <Setting Name="HostComConnection_LastComPort" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="ComConnection_LastBaudRate" Type="System.Int32" Scope="User">
+    <Setting Name="HostComConnection_LastBaudRate" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">9600</Value>
+    </Setting>
+    <Setting Name="HostComConnection_LastParity" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="HostComConnection_LastDataBits" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">8</Value>
+    </Setting>
+    <Setting Name="HostComConnection_LastStoppBits" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="HostComConnection_LastHandshake" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="DeviceComConnection_LastComPort" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="DeviceComConnection_LastBaudRate" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">9600</Value>
+    </Setting>
+    <Setting Name="DeviceComConnection_LastParity" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="DeviceComConnection_LastDataBits" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">8</Value>
+    </Setting>
+    <Setting Name="DeviceComConnection_LastStoppBits" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="DeviceComConnection_LastHandshake" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
     </Setting>
   </Settings>
 </SettingsFile>

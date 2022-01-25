@@ -137,6 +137,7 @@
   </data>
   <data name="Label_Parity" xml:space="preserve">
     <value>Parity:</value>
+    <comment>Label for Parity fields</comment>
   </data>
   <data name="Enum_Parity.Odd" xml:space="preserve">
     <value>Odd</value>
@@ -152,5 +153,61 @@
   </data>
   <data name="Enum_Parity.Space" xml:space="preserve">
     <value>Space (0)</value>
+  </data>
+  <data name="MainWindow_Title" xml:space="preserve">
+    <value>Comqueror</value>
+  </data>
+  <data name="Button_Connect" xml:space="preserve">
+    <value>Connect</value>
+  </data>
+  <data name="Button_Disconnect" xml:space="preserve">
+    <value>Disconnect</value>
+  </data>
+  <data name="Label_Databits" xml:space="preserve">
+    <value>Databits:</value>
+    <comment>Label for Databits fields</comment>
+  </data>
+  <data name="Label_StopBits" xml:space="preserve">
+    <value>Stop Bits:</value>
+    <comment>Label for Stop Bits fields</comment>
+  </data>
+  <data name="Enum_StopBits.None" xml:space="preserve">
+    <value>None</value>
+  </data>
+  <data name="Enum_StopBits.One" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="Enum_StopBits.OnePointFive" xml:space="preserve">
+    <value>1.5</value>
+  </data>
+  <data name="Enum_StopBits.Two" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="Enum_Handshake.None" xml:space="preserve">
+    <value>None</value>
+  </data>
+  <data name="Enum_Handshake.XOnXOff" xml:space="preserve">
+    <value>XOn / XOff</value>
+  </data>
+  <data name="Enum_Handshake.RequestToSend" xml:space="preserve">
+    <value>RTS</value>
+  </data>
+  <data name="Enum_Handshake.RequestToSendXOnXOff" xml:space="preserve">
+    <value>RTS + XOn / XOff</value>
+  </data>
+  <data name="Label_Handshake" xml:space="preserve">
+    <value>Handshake:</value>
+  </data>
+  <data name="Header_More" xml:space="preserve">
+    <value>More</value>
+  </data>
+  <data name="Label_Status" xml:space="preserve">
+    <value>Status:</value>
+  </data>
+  <data name="Status_Connected" xml:space="preserve">
+    <value>Connected</value>
+  </data>
+  <data name="Status_Disconnected" xml:space="preserve">
+    <value>Disconnected</value>
   </data>
 </root>

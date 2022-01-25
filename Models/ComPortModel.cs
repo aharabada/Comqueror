@@ -5,12 +5,11 @@ namespace Comqueror.Models;
 public class ComPortModel : PropertyNotifier
 {
     private string? _portName;
-    private int _baudRate;
-    private Parity _parity;
-    private StopBits _stopBits;
-    private int _dataBits;
+    private int _baudRate = 9600;
+    private Parity _parity = Parity.None;
+    private StopBits _stopBits = StopBits.One;
+    private int _dataBits = 8;
     private Handshake _handshake;
-
 
     public string? PortName
     {

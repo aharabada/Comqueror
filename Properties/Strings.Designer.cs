@@ -61,6 +61,60 @@ namespace Comqueror.Properties {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Connect ähnelt.
+        /// </summary>
+        public static string Button_Connect {
+            get {
+                return ResourceManager.GetString("Button_Connect", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Disconnect ähnelt.
+        /// </summary>
+        public static string Button_Disconnect {
+            get {
+                return ResourceManager.GetString("Button_Disconnect", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die None ähnelt.
+        /// </summary>
+        public static string Enum_Handshake_None {
+            get {
+                return ResourceManager.GetString("Enum_Handshake.None", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die RTS ähnelt.
+        /// </summary>
+        public static string Enum_Handshake_RequestToSend {
+            get {
+                return ResourceManager.GetString("Enum_Handshake.RequestToSend", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die RTS + XOn / XOff ähnelt.
+        /// </summary>
+        public static string Enum_Handshake_RequestToSendXOnXOff {
+            get {
+                return ResourceManager.GetString("Enum_Handshake.RequestToSendXOnXOff", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die XOn / XOff ähnelt.
+        /// </summary>
+        public static string Enum_Handshake_XOnXOff {
+            get {
+                return ResourceManager.GetString("Enum_Handshake.XOnXOff", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die Even ähnelt.
         /// </summary>
         public static string Enum_Parity_Even {
@@ -106,6 +160,42 @@ namespace Comqueror.Properties {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die None ähnelt.
+        /// </summary>
+        public static string Enum_StopBits_None {
+            get {
+                return ResourceManager.GetString("Enum_StopBits.None", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die 1 ähnelt.
+        /// </summary>
+        public static string Enum_StopBits_One {
+            get {
+                return ResourceManager.GetString("Enum_StopBits.One", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die 1.5 ähnelt.
+        /// </summary>
+        public static string Enum_StopBits_OnePointFive {
+            get {
+                return ResourceManager.GetString("Enum_StopBits.OnePointFive", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die 2 ähnelt.
+        /// </summary>
+        public static string Enum_StopBits_Two {
+            get {
+                return ResourceManager.GetString("Enum_StopBits.Two", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die {0} Baud ähnelt.
         /// </summary>
         public static string Format_Baud {
@@ -133,11 +223,38 @@ namespace Comqueror.Properties {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die More ähnelt.
+        /// </summary>
+        public static string Header_More {
+            get {
+                return ResourceManager.GetString("Header_More", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die Baudrate: ähnelt.
         /// </summary>
         public static string Label_Baudrate {
             get {
                 return ResourceManager.GetString("Label_Baudrate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Databits: ähnelt.
+        /// </summary>
+        public static string Label_Databits {
+            get {
+                return ResourceManager.GetString("Label_Databits", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Handshake: ähnelt.
+        /// </summary>
+        public static string Label_Handshake {
+            get {
+                return ResourceManager.GetString("Label_Handshake", resourceCulture);
             }
         }
         
@@ -156,6 +273,51 @@ namespace Comqueror.Properties {
         public static string Label_Port {
             get {
                 return ResourceManager.GetString("Label_Port", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Status: ähnelt.
+        /// </summary>
+        public static string Label_Status {
+            get {
+                return ResourceManager.GetString("Label_Status", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Stop Bits: ähnelt.
+        /// </summary>
+        public static string Label_StopBits {
+            get {
+                return ResourceManager.GetString("Label_StopBits", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Comqueror ähnelt.
+        /// </summary>
+        public static string MainWindow_Title {
+            get {
+                return ResourceManager.GetString("MainWindow_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Connected ähnelt.
+        /// </summary>
+        public static string Status_Connected {
+            get {
+                return ResourceManager.GetString("Status_Connected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Disconnected ähnelt.
+        /// </summary>
+        public static string Status_Disconnected {
+            get {
+                return ResourceManager.GetString("Status_Disconnected", resourceCulture);
             }
         }
     }
