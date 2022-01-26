@@ -20,6 +20,12 @@ public class MainWindowViewModel : PropertyNotifier
 
     private bool _isHostConnected, _isDeviceConnected;
 
+    private bool _forwardHostToDevice;
+    private bool _forwardDeviceToHost;
+
+    private SerialPort _hostComPort = new();
+    private SerialPort _deviceComPort = new();
+
     public bool IsHostConnected
     {
         get => _isHostConnected;
@@ -32,14 +38,24 @@ public class MainWindowViewModel : PropertyNotifier
         set => SetIfChanged(ref _isDeviceConnected, value);
     }
 
-    private SerialPort _hostComPort = new();
-    private SerialPort _deviceComPort = new();
+    public bool ForwardHostToDevice
+    {
+        get => _forwardHostToDevice;
+        set => SetIfChanged(ref _forwardHostToDevice, value);
+    }
+
+    public bool ForwardDeviceToHost
+    {
+        get => _forwardDeviceToHost;
+        set => SetIfChanged(ref _forwardDeviceToHost, value);
+    }
 
     public ComPortModel HostComPortSettings
     {
         get => _hostComPortSettings;
         set => SetIfChanged(ref _hostComPortSettings, value);
     }
+
     public ComPortModel DeviceComPortSettings
     {
         get => _deviceComPortSettings;
@@ -51,6 +67,7 @@ public class MainWindowViewModel : PropertyNotifier
         get => _hostComConnectionViewModel;
         set => SetIfChanged(ref _hostComConnectionViewModel, value);
     }
+
     public ComConnectionViewModel DeviceComConnectionViewModel
     {
         get => _deviceComConnectionViewModel;
@@ -61,14 +78,14 @@ public class MainWindowViewModel : PropertyNotifier
     private RelayCommand? _connectDeviceCommand;
 
     public RelayCommand ConnectHostCommand => _connectHostCommand ??=
-        new(async (o) =>
+        new((o) =>
         {
-            IsHostConnected = await Connect(_hostComPortSettings, _hostComPort);
+            IsHostConnected = Connect(_hostComPortSettings, _hostComPort);
         });
     public RelayCommand ConnectDeviceCommand => _connectDeviceCommand ??= 
-        new(async (o) =>
+        new((o) =>
         {
-            IsDeviceConnected = await Connect(_deviceComPortSettings, _deviceComPort);
+            IsDeviceConnected = Connect(_deviceComPortSettings, _deviceComPort);
         });
 
     public MainWindowViewModel()
@@ -139,7 +156,7 @@ public class MainWindowViewModel : PropertyNotifier
         lastDevicePortSettings.FillComPortModel(deviceComPortSettings, DeviceComConnectionViewModel.PortNames);
     }
 
-    private async Task<bool> Connect(ComPortModel comPortSettings, SerialPort serialPort)
+    private bool Connect(ComPortModel comPortSettings, SerialPort serialPort)
     {
         if (serialPort.IsOpen)
         {

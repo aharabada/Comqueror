@@ -19,14 +19,22 @@
             <RowDefinition Height="auto"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <GroupBox Header="{x:Static p:Strings.Group_Header_PcHostConnection}" Grid.Column="0" Grid.Row="0">
+        <GroupBox Grid.Column="0" Grid.Row="0"
+                  Header="{x:Static p:Strings.Group_Header_PcHostConnection}">
             <views:ComConnectionView DataContext="{Binding HostComConnectionViewModel}" 
                                      ConnectCommand="{Binding DataContext.ConnectHostCommand, 
                 RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:MainWindow}}}"
                                      IsConnected="{Binding DataContext.IsHostConnected, 
                 RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:MainWindow}}}"/>
         </GroupBox>
-        <GroupBox Header="{x:Static p:Strings.Group_Header_DeviceConnection}" Grid.Column="2" Grid.Row="0">
+
+        <StackPanel Grid.Column="1" Grid.Row="0" Margin="5" VerticalAlignment="Center">
+            <CheckBox Margin="5" Content="FWD&gt;&gt;&gt;" IsChecked="{Binding ForwardHostToDevice}"/>
+            <CheckBox Margin="5" Content="&lt;&lt;&lt;FWD" IsChecked="{Binding ForwardDeviceToHost}"/>
+        </StackPanel>
+
+        <GroupBox Grid.Column="2" Grid.Row="0"
+                  Header="{x:Static p:Strings.Group_Header_DeviceConnection}">
             <views:ComConnectionView DataContext="{Binding DeviceComConnectionViewModel}" 
                                      ConnectCommand="{Binding DataContext.ConnectDeviceCommand, 
                 RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:MainWindow}}}"
