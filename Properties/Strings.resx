@@ -210,4 +210,10 @@
   <data name="Status_Disconnected" xml:space="preserve">
     <value>Disconnected</value>
   </data>
+  <data name="Header_Column_Message" xml:space="preserve">
+    <value>Message</value>
+  </data>
+  <data name="Header_Column_Source" xml:space="preserve">
+    <value>Source</value>
+  </data>
 </root>

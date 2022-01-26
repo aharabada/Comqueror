@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:Comqueror.Views"
              xmlns:viewModels="clr-namespace:Comqueror.ViewModels"
              xmlns:models="clr-namespace:Comqueror.Models"
+             xmlns:p="clr-namespace:Comqueror.Properties"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.DataContext>
@@ -17,7 +18,77 @@
                 <local:DatetimeTemplateSelector x:Key="DatetimeTemplateSelector"/>
             </DataGrid.Resources>
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Sender" Binding="{Binding MessageMode}"/>
+                <DataGridTextColumn Header="{x:Static p:Strings.Header_Column_Source}" Binding="{Binding MessageMode}"/>
+                
+                <!--Hex Column-->
+                <DataGridTemplateColumn Width="2*">
+                    <DataGridTemplateColumn.HeaderStyle>
+                        <Style TargetType="{x:Type DataGridColumnHeader}">
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                        </Style>
+                    </DataGridTemplateColumn.HeaderStyle>
+                    <DataGridTemplateColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <Grid Width="auto">
+                                <Rectangle Width="auto" SizeChanged="MessageHeaderSizeChanged"
+                                           HorizontalAlignment="Stretch" Loaded="HexHeaderRectLoaded" />
+                                <TextBlock x:Name="TbHexHeader"
+                                       FontFamily="Consolas" FontStretch="Normal" FontSize="12px"
+                                           Loaded="HexHeaderTextBlockLoaded"/>
+                            </Grid>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.HeaderTemplate>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate DataType="{x:Type models:MessageModel}">
+                            <TextBox Text="{Binding MessageHex}" FontStretch="Normal" FontSize="12px" FontFamily="Consolas" UndoLimit="0">
+                                <TextBox.Style>
+                                    <Style TargetType="TextBox">
+                                        <Setter Property="IsReadOnly" Value="True" />
+                                        <Setter Property="BorderThickness" Value="0" />
+                                        <Setter Property="TextWrapping" Value="Wrap" />
+                                        <Setter Property="Background" Value="Transparent" />
+                                    </Style>
+                                </TextBox.Style>
+                            </TextBox>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                
+                <!--Ascii Column-->
+                <DataGridTemplateColumn Width="*">
+                    <DataGridTemplateColumn.HeaderStyle>
+                        <Style TargetType="{x:Type DataGridColumnHeader}">
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                        </Style>
+                    </DataGridTemplateColumn.HeaderStyle>
+                    <DataGridTemplateColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <Grid Width="auto">
+                                <Rectangle Width="auto" SizeChanged="MessageHeaderSizeChanged"
+                                           HorizontalAlignment="Stretch" Loaded="AsciiHeaderRectLoaded"/>
+                                <TextBlock x:Name="TbHexHeader"
+                                       FontFamily="Consolas" FontStretch="Normal" FontSize="12px"
+                                           Loaded="AsciiHeaderTextBlockLoaded"/>
+                            </Grid>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.HeaderTemplate>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate DataType="{x:Type models:MessageModel}">
+                            <StackPanel>
+                                <TextBox Text="{Binding MessageText}" FontStretch="Normal" FontSize="12px" FontFamily="Consolas" UndoLimit="0">
+                                    <TextBox.Style>
+                                        <Style TargetType="TextBox">
+                                            <Setter Property="IsReadOnly" Value="True" />
+                                            <Setter Property="BorderThickness" Value="0" />
+                                            <Setter Property="TextWrapping" Value="Wrap" />
+                                            <Setter Property="Background" Value="Transparent" />
+                                        </Style>
+                                    </TextBox.Style>
+                                </TextBox>
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

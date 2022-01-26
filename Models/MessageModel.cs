@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Collections.ObjectModel;
 using System.Text;
 
 namespace Comqueror.Models;
@@ -12,6 +12,7 @@ public enum MessageMode
 public class MessageModel : PropertyNotifier
 {
     private string? _messageText;
+    private string? _messageHex;
     private byte[] _data;
     private MessageMode _messageMode;
 
@@ -22,7 +23,8 @@ public class MessageModel : PropertyNotifier
         {
             if (SetIfChanged(ref _data, value))
             {
-
+                MessageText = FormatMessage(false);
+                MessageHex = FormatMessage(true);
             }
         }
     }
@@ -32,6 +34,11 @@ public class MessageModel : PropertyNotifier
         get => _messageText;
         set => SetIfChanged(ref _messageText, value);
     }
+    public string MessageHex
+    {
+        get => _messageHex;
+        set => SetIfChanged(ref _messageHex, value);
+    }
 
     public MessageMode MessageMode
     {
@@ -39,39 +46,62 @@ public class MessageModel : PropertyNotifier
         set => SetIfChanged(ref _messageMode, value);
     }
 
-    public string FormatMessage(MessageFormat messageFormat)
+    public string FormatMessage()
     {
         StringBuilder stringBuilder = new();
 
+        FormatHex(stringBuilder);
+
+        stringBuilder.Append("  <-->  ");
+
         FormatAscii(stringBuilder);
 
-        /*
-        switch (messageFormat)
+        return stringBuilder.ToString();
+    }
+    public string FormatMessage(bool hex)
+    {
+        StringBuilder stringBuilder = new();
+
+        if (hex)
         {
-            case MessageFormat.ASCII:
-                FormatAscii(stringBuilder);
-                break;
-            case MessageFormat.Hex:
-                FormatHex(stringBuilder);
-                break;
+            FormatHex(stringBuilder);
         }
-        */
+        else
+        {
+            FormatAscii(stringBuilder);
+        }
+
         return stringBuilder.ToString();
     }
 
     private void FormatAscii(StringBuilder stringBuilder)
     {
+        int i = 0;
+
         foreach (byte b in _data)
         {
             stringBuilder.Append((char)b);
+            i++;
+        }
+        for (; i < 8; i++)
+        {
+            stringBuilder.Append(".");
         }
     }
 
     private void FormatHex(StringBuilder stringBuilder)
     {
+        int i = 0;
+
         foreach (byte b in _data)
         {
-            stringBuilder.Append($"0x{b:X2}");
+            stringBuilder.Append($"{b:X2} ");
+            i++;
+        }
+
+        for (; i < 8; i++)
+        {
+            stringBuilder.Append("__ ");
         }
     }
 }

@@ -223,6 +223,24 @@ namespace Comqueror.Properties {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Message ähnelt.
+        /// </summary>
+        public static string Header_Column_Message {
+            get {
+                return ResourceManager.GetString("Header_Column_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Source ähnelt.
+        /// </summary>
+        public static string Header_Column_Source {
+            get {
+                return ResourceManager.GetString("Header_Column_Source", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die More ähnelt.
         /// </summary>
         public static string Header_More {

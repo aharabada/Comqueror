@@ -169,4 +169,10 @@
   <data name="Status_Disconnected" xml:space="preserve">
     <value>Getrennt</value>
   </data>
+  <data name="Header_Column_Message" xml:space="preserve">
+    <value>Nachricht</value>
+  </data>
+  <data name="Header_Column_Source" xml:space="preserve">
+    <value>Quelle</value>
+  </data>
 </root>
