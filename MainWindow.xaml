@@ -41,7 +41,7 @@
                                      IsConnected="{Binding DataContext.IsDeviceConnected, 
                 RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:MainWindow}}}"/>
         </GroupBox>
-        <GroupBox Grid.ColumnSpan="3" Grid.Row="1" Header="Messages">
+        <GroupBox Grid.ColumnSpan="3" Grid.Row="1" Header="{x:Static p:Strings.Group_Header_Messages}">
             <views:MessageLogView/>
         </GroupBox>
     </Grid>

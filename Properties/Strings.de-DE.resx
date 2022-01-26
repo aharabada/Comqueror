@@ -181,4 +181,7 @@
   <data name="CheckBox_AutoScroll" xml:space="preserve">
     <value>Automatisch scrollen</value>
   </data>
+  <data name="Group_Header_Messages" xml:space="preserve">
+    <value>Nachrichten</value>
+  </data>
 </root>

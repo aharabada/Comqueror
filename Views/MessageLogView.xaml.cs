@@ -182,4 +182,54 @@ public partial class MessageLogView : UserControl
 
         return new Size(formattedText.Width, formattedText.Height);
     }
+
+    private int StartOfLine(string text, int index)
+    {
+        while (true)
+        {
+            if (index <= 0)
+                return 0;
+
+            if (text[index] == '\n')
+                return index + 1;
+
+            index--;
+        }
+    }
+
+    private void TxtBla(object sender, RoutedEventArgs e)
+    {
+        if (!(sender is TextBox textBox))
+            return;
+
+        //Debug.WriteLine($"{textBox.SelectionStart} | {textBox.SelectionLength}");
+
+        //textBox.Selection
+
+        // Fix start of selection
+        {
+            int startOfLine = StartOfLine(textBox.Text, textBox.SelectionStart);
+
+            int indexInLine = textBox.SelectionStart - startOfLine;
+
+            int selectionStart = startOfLine + (indexInLine / 3 * 3);
+
+            int difference = selectionStart - textBox.SelectionStart;
+
+            if (difference != 0)
+            {
+                textBox.SelectionStart = selectionStart;
+                //textBox.SelectionLength += difference;
+            }
+        }
+
+        // Fix selection length
+
+        //int mod = textBox.SelectionLength % 3;
+
+        //if (mod != 0)
+        //{
+        //    textBox.SelectionLength += (3 - mod);
+        //}
+    }
 }

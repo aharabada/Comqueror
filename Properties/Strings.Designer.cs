@@ -232,6 +232,15 @@ namespace Comqueror.Properties {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Messages ähnelt.
+        /// </summary>
+        public static string Group_Header_Messages {
+            get {
+                return ResourceManager.GetString("Group_Header_Messages", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die PC / Host Connection ähnelt.
         /// </summary>
         public static string Group_Header_PcHostConnection {
