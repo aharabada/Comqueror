@@ -61,6 +61,15 @@ namespace Comqueror.Properties {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Clear Log ähnelt.
+        /// </summary>
+        public static string Button_ClearLog {
+            get {
+                return ResourceManager.GetString("Button_ClearLog", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die Connect ähnelt.
         /// </summary>
         public static string Button_Connect {
@@ -75,6 +84,15 @@ namespace Comqueror.Properties {
         public static string Button_Disconnect {
             get {
                 return ResourceManager.GetString("Button_Disconnect", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Auto scroll ähnelt.
+        /// </summary>
+        public static string CheckBox_AutoScroll {
+            get {
+                return ResourceManager.GetString("CheckBox_AutoScroll", resourceCulture);
             }
         }
         

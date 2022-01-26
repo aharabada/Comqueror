@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Comqueror.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -28,9 +29,14 @@ public partial class MessageLogView : UserControl
     TextBlock? AsciiHeaderTextBlock;
     Rectangle? AsciiHeaderRect;
 
+    private MessageLogViewModel _viewModel;
+
     public MessageLogView()
     {
         InitializeComponent();
+
+        if (DataContext is MessageLogViewModel viewModel)
+            _viewModel = viewModel;
     }
 
     private void HexHeaderTextBlockLoaded(object sender, RoutedEventArgs e) => HexHeaderTextBlock = sender as TextBlock;
@@ -43,27 +49,28 @@ public partial class MessageLogView : UserControl
 
     private void MessageHeaderSizeChanged(object sender, SizeChangedEventArgs e)
     {
-        FindBestCharsPerRow();
+        FindBytesPerRow();
     }
 
-    int lastNums = 0;
-
-    private void FindBestCharsPerRow()
+    /// <summary>
+    /// Finds the number of bytes that can be displayed in both the ascii and the hex column.
+    /// </summary>
+    private void FindBytesPerRow()
     {
         if (HexHeaderTextBlock == null || AsciiHeaderTextBlock == null || HexHeaderRect == null || AsciiHeaderRect == null)
             return;
 
-        int hexNums = FindHexNumsPerRow(HexHeaderRect.ActualWidth);
+        int hexNumbersPerRow = FindHexNumsPerRow(HexHeaderRect.ActualWidth);
 
-        int charNums = FindAsciiCharsPerRow(AsciiHeaderRect.ActualWidth);
+        int asciiCharsPerRow = FindAsciiCharsPerRow(AsciiHeaderRect.ActualWidth);
 
-        int actualNums = Math.Min(hexNums, charNums);
+        int messageBytesPerRow = Math.Min(hexNumbersPerRow, asciiCharsPerRow);
 
-        if (actualNums != lastNums)
+        if (messageBytesPerRow != _viewModel.MessageBytesPerRow)
         {
             StringBuilder builder = new();
 
-            for (int i = 0; i < actualNums; i++)
+            for (int i = 0; i < messageBytesPerRow; i++)
             {
                 builder.AppendFormat("{0,-3:X}", i);
             }
@@ -72,15 +79,22 @@ public partial class MessageLogView : UserControl
 
             builder.Clear();
 
-            for (int i = 0; i < actualNums; i++)
+            for (int i = 0; i < messageBytesPerRow; i++)
             {
                 builder.AppendFormat("{0:X}", i % 16);
             }
 
             AsciiHeaderTextBlock.Text = builder.ToString();
+
+            _viewModel.MessageBytesPerRow = messageBytesPerRow;
         }
     }
 
+    /// <summary>
+    /// Finds the maximum number of Hex-Numbers that fit into the Hex-Column.
+    /// </summary>
+    /// <param name="width">Width of the column.</param>
+    /// <returns>The number of hex bytes that fits into the column.</returns>
     private int FindHexNumsPerRow(double width)
     {
         int hexTargetNums = 0;
@@ -115,6 +129,11 @@ public partial class MessageLogView : UserControl
         return hexTargetNums;
     }
 
+    /// <summary>
+    /// Finds the maximum number of Ascii-chars that fit into the Ascii-Column.
+    /// </summary>
+    /// <param name="width">Width of the column.</param>
+    /// <returns>The number of ascii chars that fits into the column.</returns>
     private int FindAsciiCharsPerRow(double width)
     {
         int asciiChars = 0;
@@ -151,7 +170,6 @@ public partial class MessageLogView : UserControl
 
     private Size MeasureHeaderString(string candidate, TextBlock tbHeader)
     {
-
         var formattedText = new FormattedText(
             candidate,
             CultureInfo.CurrentCulture,
@@ -163,20 +181,5 @@ public partial class MessageLogView : UserControl
             1);
 
         return new Size(formattedText.Width, formattedText.Height);
-    }
-}
-
-public class DatetimeTemplateSelector : DataTemplateSelector
-{
-    public override DataTemplate SelectTemplate(object item, DependencyObject container)
-    {
-        FrameworkElement? element = container as FrameworkElement;
-
-        //if (element != null && item != null && item is SettingViewModel model)
-        //{
-        //    return (DataTemplate)element.FindResource(model.EditElement.ToString() + "Template");
-        //}
-
-        return null;
     }
 }

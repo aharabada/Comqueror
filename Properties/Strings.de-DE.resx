@@ -175,4 +175,10 @@
   <data name="Header_Column_Source" xml:space="preserve">
     <value>Quelle</value>
   </data>
+  <data name="Button_ClearLog" xml:space="preserve">
+    <value>Log leeren</value>
+  </data>
+  <data name="CheckBox_AutoScroll" xml:space="preserve">
+    <value>Automatisch scrollen</value>
+  </data>
 </root>

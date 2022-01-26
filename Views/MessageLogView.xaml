@@ -13,12 +13,17 @@
         <viewModels:MessageLogViewModel/>
     </UserControl.DataContext>
     <Grid>
-        <DataGrid AutoGenerateColumns="False" ItemsSource="{Binding Messages}" CanUserAddRows="False">
-            <DataGrid.Resources>
-                <local:DatetimeTemplateSelector x:Key="DatetimeTemplateSelector"/>
-            </DataGrid.Resources>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Row="0" Orientation="Horizontal">
+            <Button Margin="5" Padding="5" Content="{x:Static p:Strings.Button_ClearLog}" Command="{Binding ClearLogCommand}"/>
+            <CheckBox Margin="5" Content="{x:Static p:Strings.CheckBox_AutoScroll}" VerticalContentAlignment="Center"/>
+        </StackPanel>
+        <DataGrid Grid.Row="1" AutoGenerateColumns="False" ItemsSource="{Binding Messages}" CanUserAddRows="False">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="{x:Static p:Strings.Header_Column_Source}" Binding="{Binding MessageMode}"/>
+                <DataGridTextColumn Header="{x:Static p:Strings.Header_Column_Source}" Binding="{Binding MessageModel.MessageMode}"/>
                 
                 <!--Hex Column-->
                 <DataGridTemplateColumn Width="2*">
@@ -39,13 +44,13 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.HeaderTemplate>
                     <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate DataType="{x:Type models:MessageModel}">
-                            <TextBox Text="{Binding MessageHex}" FontStretch="Normal" FontSize="12px" FontFamily="Consolas" UndoLimit="0">
+                        <DataTemplate DataType="{x:Type viewModels:MessageViewModel}">
+                            <TextBox Text="{Binding HexMessage}" FontStretch="Normal" FontSize="12px" FontFamily="Consolas" UndoLimit="0">
                                 <TextBox.Style>
                                     <Style TargetType="TextBox">
                                         <Setter Property="IsReadOnly" Value="True" />
                                         <Setter Property="BorderThickness" Value="0" />
-                                        <Setter Property="TextWrapping" Value="Wrap" />
+                                        <Setter Property="TextWrapping" Value="NoWrap" />
                                         <Setter Property="Background" Value="Transparent" />
                                     </Style>
                                 </TextBox.Style>
@@ -73,14 +78,14 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.HeaderTemplate>
                     <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate DataType="{x:Type models:MessageModel}">
+                        <DataTemplate DataType="{x:Type viewModels:MessageViewModel}">
                             <StackPanel>
-                                <TextBox Text="{Binding MessageText}" FontStretch="Normal" FontSize="12px" FontFamily="Consolas" UndoLimit="0">
+                                <TextBox Text="{Binding AsciiMessage}" FontStretch="Normal" FontSize="12px" FontFamily="Consolas" UndoLimit="0">
                                     <TextBox.Style>
                                         <Style TargetType="TextBox">
                                             <Setter Property="IsReadOnly" Value="True" />
                                             <Setter Property="BorderThickness" Value="0" />
-                                            <Setter Property="TextWrapping" Value="Wrap" />
+                                            <Setter Property="TextWrapping" Value="NoWrap" />
                                             <Setter Property="Background" Value="Transparent" />
                                         </Style>
                                     </TextBox.Style>
