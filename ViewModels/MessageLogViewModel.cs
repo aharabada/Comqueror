@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Data;
 
 namespace Comqueror.ViewModels;
@@ -14,7 +15,7 @@ public class MessageLogViewModel : PropertyNotifier
 
     public ObservableCollection<MessageViewModel> Messages => _messages;
 
-    public MessageViewModel _lastMessage;
+    private MessageViewModel _lastMessage;
 
     public readonly object MessagesLock = new();
 
@@ -34,7 +35,7 @@ public class MessageLogViewModel : PropertyNotifier
 
     private RelayCommand _clearLogCommand;
 
-    public RelayCommand ClearLogCommand => _clearLogCommand ??= new(o => ClearLog());
+    public RelayCommand ClearLogCommand => _clearLogCommand ??= new(async o => await Task.Run(ClearLog));
 
     private bool _autoScroll;
 
@@ -46,17 +47,15 @@ public class MessageLogViewModel : PropertyNotifier
 
     public MessageLogViewModel()
     {
-        MessageViewModel vm = new();
-
         string msg = "Hallo Welt! Ich bin sooooo lang!!!!";
 
-        vm.MessageModel = new()
+        MessageModel msgMod = new()
         {
             MessageMode = MessageMode.Sent,
             Data = Encoding.ASCII.GetBytes(msg)
         };
 
-        _messages.Add(vm);
+        AddMessage(msgMod, true);
 
         BindingOperations.EnableCollectionSynchronization(_messages, MessagesLock);
     }
@@ -66,19 +65,21 @@ public class MessageLogViewModel : PropertyNotifier
         lock (_messages)
         {
             _messages.Clear();
-        }        
+        }  
     }
     
-
     private void ReformatMessages()
     {
-        foreach (MessageViewModel message in _messages)
+        lock (MessagesLock)
         {
-            message.ReformatMessage(_messageBytesPerRow);
+            foreach (MessageViewModel message in _messages)
+            {
+                message.ReformatMessage(_messageBytesPerRow);
+            }
         }
     }
 
-    private void AddMessage(MessageModel message)
+    private void AddMessage(MessageModel message, bool newLastMessage)
     {
         MessageViewModel messageViewModel = new();
         messageViewModel.MessageModel = message;
@@ -87,39 +88,53 @@ public class MessageLogViewModel : PropertyNotifier
         lock (MessagesLock)
         {
             _messages.Add(messageViewModel);
+
+            if (newLastMessage)
+            {
+                AddMessage(new MessageModel()
+                {
+                    Data = new byte[0]
+                }, false);
+            }
+            else
+            {
+                _lastMessage = messageViewModel;
+            }
         }
     }
 
-    MessageMode _lastMode;
-    MemoryStream _newDataBuffer = new();
-    object _newDataBufferLock = new();
-
     internal void ReceivedData(byte[] data, MessageMode mode)
     {
-        List<MessageModel> messages = new();
+        if (data.Length == 0)
+            return;
 
-        void Flush()
+        void AppendSpan(MessageModel message, ReadOnlySpan<byte> data)
         {
-            if (_newDataBuffer.Length == 0)
-                return;
+            int oldLength = message.Data.Length;
 
-            byte[] messageData = _newDataBuffer.ToArray();
+            byte[] msgData = message.Data;
 
-            messages.Add(new MessageModel()
-            {
-                Data = messageData,
-                MessageMode = _lastMode
-            });
+            Array.Resize(ref msgData, oldLength + data.Length);
 
-            _newDataBuffer.SetLength(0);
+            data.CopyTo(new Span<byte>(msgData, oldLength, data.Length));
+
+            message.Data = msgData;
+
+            _lastMessage.ReformatMessage(_messageBytesPerRow);
         }
 
-        lock (_newDataBufferLock)
+        lock (MessagesLock)
         {
-            if (mode != _lastMode)
-            {
-                Flush();
-            }
+            if (_lastMessage.MessageModel.MessageMode == MessageMode.None)
+                _lastMessage.MessageModel.MessageMode = mode;
+
+            if (_lastMessage.MessageModel.MessageMode != mode)
+                AddMessage(new MessageModel()
+                {
+                    Data = new byte[0]
+                }, false);
+
+            MessageModel message = _lastMessage.MessageModel;
 
             ReadOnlySpan<byte> span = new ReadOnlySpan<byte>(data);
 
@@ -129,16 +144,21 @@ public class MessageLogViewModel : PropertyNotifier
 
                 if (newLineIndex == -1)
                 {
-                    _newDataBuffer.Write(span);
+                    AppendSpan(message, span);
+
                     break;
                 }
                 else
                 {
                     ReadOnlySpan<byte> lineSlice = span.Slice(0, newLineIndex + 1);
 
-                    _newDataBuffer.Write(lineSlice);
+                    AppendSpan(message, lineSlice);
 
-                    Flush();
+                    AddMessage(new MessageModel()
+                    {
+                        Data = new byte[0]
+                    }, false);
+                    message = _lastMessage.MessageModel;
 
                     // Cut data until newLine from Span
                     span = span.Slice(newLineIndex + 1);
@@ -146,12 +166,62 @@ public class MessageLogViewModel : PropertyNotifier
             }
         }
 
-        if (messages.Count > 0)
-        {
-            foreach (MessageModel message in messages)
-            {
-                AddMessage(message);
-            }
-        }
+        //List<MessageModel> messages = new();
+
+        //void Flush()
+        //{
+        //    if (_newDataBuffer.Length == 0)
+        //        return;
+
+        //    byte[] messageData = _newDataBuffer.ToArray();
+
+        //    messages.Add(new MessageModel()
+        //    {
+        //        Data = messageData,
+        //        MessageMode = _lastMode
+        //    });
+
+        //    _newDataBuffer.SetLength(0);
+        //}
+
+        //lock (_newDataBufferLock)
+        //{
+        //    if (mode != _lastMode)
+        //    {
+        //        Flush();
+        //    }
+
+        //    ReadOnlySpan<byte> span = new ReadOnlySpan<byte>(data);
+
+        //    while (span.Length > 0)
+        //    {
+        //        int newLineIndex = span.IndexOf((byte)'\n');
+
+        //        if (newLineIndex == -1)
+        //        {
+        //            _newDataBuffer.Write(span);
+        //            break;
+        //        }
+        //        else
+        //        {
+        //            ReadOnlySpan<byte> lineSlice = span.Slice(0, newLineIndex + 1);
+
+        //            _newDataBuffer.Write(lineSlice);
+
+        //            Flush();
+
+        //            // Cut data until newLine from Span
+        //            span = span.Slice(newLineIndex + 1);
+        //        }
+        //    }
+        //}
+
+        //if (messages.Count > 0)
+        //{
+        //    foreach (MessageModel message in messages)
+        //    {
+        //        AddMessage(message);
+        //    }
+        //}
     }
 }

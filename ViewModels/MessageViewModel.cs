@@ -52,6 +52,9 @@ public class MessageViewModel : PropertyNotifier
 
     private void FormatAscii(StringBuilder stringBuilder, int bytesPerRow)
     {
+        if (_messageModel.Data == null)
+            return;
+
         int i = 0;
 
         foreach (byte b in _messageModel.Data)
@@ -74,6 +77,9 @@ public class MessageViewModel : PropertyNotifier
 
     private void FormatHex(StringBuilder stringBuilder, int bytesPerRow)
     {
+        if (_messageModel.Data == null)
+            return;
+
         int i = 0;
 
         foreach (byte b in _messageModel.Data)

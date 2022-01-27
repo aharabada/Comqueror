@@ -5,8 +5,9 @@ namespace Comqueror.Models;
 
 public enum MessageMode
 {
+    None,
     Received,
-    Sent
+    Sent,
 }
 
 public class MessageModel : PropertyNotifier
