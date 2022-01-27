@@ -232,4 +232,10 @@ public partial class MessageLogView : UserControl
         //    textBox.SelectionLength += (3 - mod);
         //}
     }
+
+    private void UC_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+    {
+        if (DataContext is MessageLogViewModel viewModel)
+            _viewModel = viewModel;
+    }
 }

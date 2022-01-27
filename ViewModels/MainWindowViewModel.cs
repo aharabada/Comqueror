@@ -2,6 +2,7 @@
 using Comqueror.Properties;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.IO.Ports;
 using System.Linq;
@@ -18,6 +19,8 @@ public class MainWindowViewModel : PropertyNotifier
     private ComConnectionViewModel _hostComConnectionViewModel;
     private ComConnectionViewModel _deviceComConnectionViewModel;
 
+    private MessageLogViewModel _messageLogViewModel = new();
+
     private bool _isHostConnected, _isDeviceConnected;
 
     private bool _forwardHostToDevice;
@@ -25,6 +28,8 @@ public class MainWindowViewModel : PropertyNotifier
 
     private SerialPort _hostComPort = new();
     private SerialPort _deviceComPort = new();
+
+    public MessageLogViewModel MessageLogViewModel => _messageLogViewModel;
 
     public bool IsHostConnected
     {
@@ -86,7 +91,37 @@ public class MainWindowViewModel : PropertyNotifier
         new((o) =>
         {
             IsDeviceConnected = Connect(_deviceComPortSettings, _deviceComPort);
+            //if (IsDeviceConnected)
+            //    RegisterDevicePortEvents(_deviceComPort);
         });
+
+    private void RegisterDevicePortEvents(SerialPort deviceComPort)
+    {
+        deviceComPort.DataReceived += async (s, e) =>
+        {
+            SerialPort port = (SerialPort)s;
+
+            byte[] data = new byte[port.BytesToRead];
+
+            int i = await port.BaseStream.ReadAsync(data);
+
+            Debug.WriteLine($"Read {i} bytes from Device. There are {port.BytesToRead} new bytes available.");
+
+            //Debug.Assert(port.BytesToRead == 0);
+
+            //int bytesAvailable;
+            //while ((bytesAvailable = port.BytesToRead) > 0)
+            //{
+            //    int oldLength = data.Length;
+
+            //    Array.Resize(ref data, data.Length + bytesAvailable);
+
+
+            //}
+        };
+
+
+    }
 
     public MainWindowViewModel()
     {
@@ -177,13 +212,56 @@ public class MainWindowViewModel : PropertyNotifier
         serialPort.BaudRate = comPortSettings.BaudRate;
         serialPort.Parity = comPortSettings.Parity;
         serialPort.DataBits = comPortSettings.DataBits;
+
         serialPort.StopBits = comPortSettings.StopBits;
         serialPort.Handshake = comPortSettings.Handshake;
+
+        serialPort.DtrEnable = true;
+        serialPort.RtsEnable = true;
+
         //serialPort.BreakState = ...
         // TODO: More settings
 
         try
         {
+            serialPort.DataReceived += async (s, e) =>
+            {
+                Task.Delay(125);
+
+                SerialPort port = (SerialPort)s;
+
+                int bytesAvailable = port.BytesToRead;
+                byte[] data = new byte[bytesAvailable];
+
+                int i = await port.BaseStream.ReadAsync(data);
+                
+                Debug.WriteLine($"Read {i} bytes from Device.");
+
+                while ((bytesAvailable = port.BytesToRead) > 0)
+                {
+                    int oldLength = data.Length;
+
+                    Array.Resize(ref data, data.Length + bytesAvailable);
+
+                    i = await port.BaseStream.ReadAsync(data, oldLength, bytesAvailable);
+
+                    Debug.WriteLine($"Read additional {i} bytes from Device.");
+                }
+
+                MessageLogViewModel.ReceivedData(data, MessageMode.Received);
+
+                //Debug.WriteLine($"Read {i} bytes from Device. There are {port.BytesToRead} new bytes available.");
+
+                //Debug.Assert(port.BytesToRead == 0);
+
+                //int bytesAvailable;
+                //while ((bytesAvailable = port.BytesToRead) > 0)
+                //{
+                //    int oldLength = data.Length;
+
+                //    Array.Resize(ref data, data.Length + bytesAvailable);
+                //}
+            };
             serialPort.Open();
 
             return true;

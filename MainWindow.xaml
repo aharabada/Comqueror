@@ -42,7 +42,7 @@
                 RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:MainWindow}}}"/>
         </GroupBox>
         <GroupBox Grid.ColumnSpan="3" Grid.Row="1" Header="{x:Static p:Strings.Group_Header_Messages}">
-            <views:MessageLogView/>
+            <views:MessageLogView DataContext="{Binding MessageLogViewModel}"/>
         </GroupBox>
     </Grid>
 </Window>
