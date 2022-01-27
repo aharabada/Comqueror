@@ -7,7 +7,9 @@
              xmlns:viewModels="clr-namespace:Comqueror.ViewModels"
              xmlns:models="clr-namespace:Comqueror.Models"
              xmlns:p="clr-namespace:Comqueror.Properties"
-             xmlns:Comqueror="clr-namespace:Comqueror" x:Class="Comqueror.Views.MessageLogView"
+             xmlns:Comqueror="clr-namespace:Comqueror"
+             xmlns:util="clr-namespace:Comqueror.Utility"
+             x:Class="Comqueror.Views.MessageLogView"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
             DataContextChanged="UC_DataContextChanged">
@@ -21,9 +23,9 @@
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0" Orientation="Horizontal">
             <Button Margin="5" Padding="5" Content="{x:Static p:Strings.Button_ClearLog}" Command="{Binding ClearLogCommand}"/>
-            <CheckBox Margin="5" Content="{x:Static p:Strings.CheckBox_AutoScroll}" VerticalContentAlignment="Center"/>
+            <CheckBox x:Name="CbAutoScroll" Margin="5" Content="{x:Static p:Strings.CheckBox_AutoScroll}" VerticalContentAlignment="Center"/>
         </StackPanel>
-        <DataGrid Grid.Row="1" AutoGenerateColumns="False" ItemsSource="{Binding Messages}" CanUserAddRows="False">
+        <DataGrid x:Name="MessageGrid" util:DataGridBehavior.Autoscroll="{Binding IsChecked, ElementName=CbAutoScroll}" Grid.Row="1" AutoGenerateColumns="False" ItemsSource="{Binding Messages}" CanUserAddRows="False">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="{x:Static p:Strings.Header_Column_Source}" Binding="{Binding MessageModel.MessageMode}"/>
 

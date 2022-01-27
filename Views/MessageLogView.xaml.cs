@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -35,8 +36,8 @@ public partial class MessageLogView : UserControl
     {
         InitializeComponent();
 
-        if (DataContext is MessageLogViewModel viewModel)
-            _viewModel = viewModel;
+        //if (DataContext is MessageLogViewModel viewModel)
+        //    _viewModel = viewModel;
     }
 
     private void HexHeaderTextBlockLoaded(object sender, RoutedEventArgs e) => HexHeaderTextBlock = sender as TextBlock;

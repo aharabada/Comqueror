@@ -37,14 +37,6 @@ public class MessageLogViewModel : PropertyNotifier
 
     public RelayCommand ClearLogCommand => _clearLogCommand ??= new(async o => await Task.Run(ClearLog));
 
-    private bool _autoScroll;
-
-    public bool AutoScroll
-    {
-        get => _autoScroll;
-        set => SetIfChanged(ref _autoScroll, value);
-    }
-
     public MessageLogViewModel()
     {
         string msg = "Hallo Welt! Ich bin sooooo lang!!!!";
