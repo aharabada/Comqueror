@@ -15,6 +15,8 @@ public class MessageModel : PropertyNotifier
     private byte[] _data;
     private MessageMode _messageMode;
 
+    private int _messageIndex;
+
     public byte[] Data
     {
         get => _data;
@@ -28,5 +30,11 @@ public class MessageModel : PropertyNotifier
     {
         get => _messageMode;
         set => SetIfChanged(ref _messageMode, value);
+    }
+
+    public int MessageIndex
+    {
+        get => _messageIndex;
+        set => SetIfChanged(ref _messageIndex, value);
     }
 }

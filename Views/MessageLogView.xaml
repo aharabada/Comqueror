@@ -27,8 +27,16 @@
         </StackPanel>
         <DataGrid x:Name="MessageGrid" util:DataGridBehavior.Autoscroll="{Binding IsChecked, ElementName=CbAutoScroll}" Grid.Row="1" AutoGenerateColumns="False" ItemsSource="{Binding Messages}" CanUserAddRows="False">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="{x:Static p:Strings.Header_Column_Source}" Binding="{Binding MessageModel.MessageMode}"/>
-
+                <DataGridTemplateColumn Header="{x:Static p:Strings.Header_Column_Source}" Width="auto">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate DataType="{x:Type models:MessageModel}">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Margin="0 0 5 0" Text="{Binding MessageModel.MessageMode}" />
+                                <TextBlock Text="{Binding MessageModel.MessageIndex}" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
                 <!--Hex Column-->
                 <DataGridTemplateColumn Width="2*">
                     <DataGridTemplateColumn.HeaderStyle>

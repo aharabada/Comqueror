@@ -86,17 +86,17 @@ public class MainWindowViewModel : PropertyNotifier
     private RelayCommand? _sendMessageCommand;
 
     public RelayCommand ConnectHostCommand => _connectHostCommand ??=
-        new((o) =>
+        new(async (o) =>
         {
-            IsHostConnected = Connect(_hostComPortSettings, _hostComPort);
+            IsHostConnected = await ConnectAsync(_hostComPortSettings, _hostComPort);
             if (IsHostConnected)
                 RegisterHostPortEvents(_hostComPort);
         });
 
     public RelayCommand ConnectDeviceCommand => _connectDeviceCommand ??= 
-        new((o) =>
+        new(async (o) => 
         {
-            IsDeviceConnected = Connect(_deviceComPortSettings, _deviceComPort);
+            IsDeviceConnected = await ConnectAsync(_deviceComPortSettings, _deviceComPort);
             if (IsDeviceConnected)
                 RegisterDevicePortEvents(_deviceComPort);
         });
@@ -302,6 +302,11 @@ public class MainWindowViewModel : PropertyNotifier
         };
 
         lastDevicePortSettings.FillComPortModel(deviceComPortSettings, DeviceComConnectionViewModel.PortNames);
+    }
+
+    private Task<bool> ConnectAsync(ComPortModel comPortSettings, SerialPort serialPort)
+    {
+        return Task.Run(() => Connect(comPortSettings, serialPort));
     }
 
     private bool Connect(ComPortModel comPortSettings, SerialPort serialPort)

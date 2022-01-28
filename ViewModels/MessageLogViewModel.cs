@@ -95,6 +95,9 @@ public class MessageLogViewModel : PropertyNotifier
         }
     }
 
+    int _receivedMessages = 0;
+    int _sentMessages = 0;
+
     internal void LogData(byte[] data, MessageMode mode)
     {
         if (data.Length == 0)
@@ -115,6 +118,15 @@ public class MessageLogViewModel : PropertyNotifier
             if (message.MessageMode == MessageMode.None)
             {
                 message.MessageMode = mode;
+
+                if (mode == MessageMode.Sent)
+                {
+                    message.MessageIndex = ++_sentMessages;
+                }
+                else if (mode == MessageMode.Received)
+                {
+                    message.MessageIndex = ++_receivedMessages;
+                }
             }
 
             _lastMessage.ReformatMessage(_messageBytesPerRow);
@@ -150,6 +162,15 @@ public class MessageLogViewModel : PropertyNotifier
                     ReadOnlySpan<byte> lineSlice = span.Slice(0, newLineIndex + 1);
 
                     AppendSpan(message, lineSlice);
+
+                    if (mode == MessageMode.Sent)
+                    {
+                        message.MessageIndex = ++_sentMessages;
+                    }
+                    else if (mode == MessageMode.Received)
+                    {
+                        message.MessageIndex = ++_receivedMessages;
+                    }
 
                     AddMessage(new MessageModel()
                     {
