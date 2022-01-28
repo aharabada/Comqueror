@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using RJCP.IO.Ports;
+using System.Windows.Threading;
 
 namespace Comqueror.ViewModels;
 
@@ -26,8 +27,8 @@ public class MainWindowViewModel : PropertyNotifier
     private bool _forwardHostToDevice;
     private bool _forwardDeviceToHost;
 
-    private SerialPortStream _hostComPortStream = new();
-    private SerialPortStream _deviceComPortStream = new();
+    private SerialPortStream? _hostComPortStream;
+    private SerialPortStream? _deviceComPortStream;
 
     public MessageLogViewModel MessageLogViewModel => _messageLogViewModel;
 
@@ -85,20 +86,57 @@ public class MainWindowViewModel : PropertyNotifier
     private RelayCommand? _sendMessageCommand;
 
     public RelayCommand ConnectHostCommand => _connectHostCommand ??=
-        new(async (o) =>
+        new(async (o) => await ConnectOrDisconnectHost());
+
+    private async Task ConnectOrDisconnectHost(bool showErrors = true)
+    {
+        if (IsDeviceConnected)
         {
-            IsHostConnected = await ConnectAsync(_hostComPortSettings, _hostComPortStream);
-            if (IsHostConnected)
-                RegisterHostPortEvents(_hostComPortStream);
-        });
+            await DisconnectAsync(_hostComPortStream);
+            _hostComPortStream = null;
+        }
+        else
+        {
+            _hostComPortStream = new SerialPortStream();
+
+            if (await ConnectAsync(_hostComPortSettings, _hostComPortStream, showErrors))
+            {
+                IsDeviceConnected = true;
+            }
+
+            RegisterHostPortEvents(_hostComPortStream);
+        }
+    }
+
+    private async Task DisconnectAsync(SerialPortStream? port)
+    {
+        if (port == null)
+            return;
+
+        port.Close();
+        await port.DisposeAsync();
+    }
 
     public RelayCommand ConnectDeviceCommand => _connectDeviceCommand ??= 
-        new(async (o) => 
+        new(async (o) => await ConnectOrDisconnectDevice());
+    private async Task ConnectOrDisconnectDevice(bool showErrors = true)
+    {
+        if (IsDeviceConnected)
         {
-            IsDeviceConnected = await ConnectAsync(_deviceComPortSettings, _deviceComPortStream);
-            if (IsDeviceConnected)
-                RegisterDevicePortEvents(_deviceComPortStream);
-        });
+            await DisconnectAsync(_deviceComPortStream);
+            _deviceComPortStream = null;
+        }
+        else
+        {
+            _deviceComPortStream = new SerialPortStream();
+            if (await ConnectAsync(_deviceComPortSettings, _deviceComPortStream, showErrors))
+            {
+                IsDeviceConnected = true;
+            }
+
+            RegisterDevicePortEvents(_deviceComPortStream);
+        }
+    }
 
     public RelayCommand SendMessageCommand => _sendMessageCommand ??=
         new(async o => await SendMessageAsync(o));
@@ -235,6 +273,16 @@ public class MainWindowViewModel : PropertyNotifier
         };
     }
 
+    DispatcherTimer _checkAliveTimer;
+
+    private bool _automaticReconnect = true;
+
+    public bool AutomaticReconnect
+    {
+        get => _automaticReconnect;
+        set => SetIfChanged(ref _automaticReconnect, value);
+    }
+
     public MainWindowViewModel()
     {
         HostComConnectionViewModel = new ComConnectionViewModel();
@@ -246,6 +294,73 @@ public class MainWindowViewModel : PropertyNotifier
 
         HostComConnectionViewModel.ComPortSettings = _hostComPortSettings;
         DeviceComConnectionViewModel.ComPortSettings = _deviceComPortSettings;
+
+        _checkAliveTimer = new DispatcherTimer();
+        _checkAliveTimer.Interval = TimeSpan.FromSeconds(1);
+        _checkAliveTimer.Tick += async (s, e) => await CheckComPorts(s, e);
+        _checkAliveTimer.Start();
+    }
+
+    bool tryReconnectDevice = false;
+    bool tryReconnectHost = false;
+
+    private async Task CheckComPorts(object? s, EventArgs e)
+    {
+        if (IsDeviceConnected && _deviceComPortStream?.IsOpen != true)
+        {
+            try
+            {
+                await ConnectOrDisconnectDevice();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+
+            IsDeviceConnected = false;
+
+            tryReconnectDevice = AutomaticReconnect;
+        }
+
+        if (tryReconnectDevice)
+        {
+            if (IsDeviceConnected)
+            {
+                tryReconnectDevice = false;
+            }
+            else
+            {
+                await ConnectOrDisconnectDevice(false);
+            }
+        }
+
+        if (IsHostConnected && _hostComPortStream?.IsOpen != true)
+        {
+            try
+            {
+                await ConnectOrDisconnectHost();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+
+            IsHostConnected = false;
+
+            tryReconnectHost = AutomaticReconnect;
+        }
+
+        if (tryReconnectHost)
+        {
+            if (IsHostConnected)
+            {
+                tryReconnectHost = false;
+            }
+            else
+            {
+                await ConnectOrDisconnectHost(false);
+            }
+        }
     }
 
     private struct SettingsContainer
@@ -303,21 +418,13 @@ public class MainWindowViewModel : PropertyNotifier
         lastDevicePortSettings.FillComPortModel(deviceComPortSettings, DeviceComConnectionViewModel.PortNames);
     }
 
-    private Task<bool> ConnectAsync(ComPortModel comPortSettings, SerialPortStream serialPort)
+    private Task<bool> ConnectAsync(ComPortModel comPortSettings, SerialPortStream serialPort, bool showErrors)
     {
-        return Task.Run(() => Connect(comPortSettings, serialPort));
+        return Task.Run(() => Connect(comPortSettings, serialPort, showErrors));
     }
 
-    private bool Connect(ComPortModel comPortSettings, SerialPortStream serialPort)
+    private bool Connect(ComPortModel comPortSettings, SerialPortStream serialPort, bool showErrors)
     {
-        if (serialPort.IsOpen)
-        {
-            // Sollte der Port sich nicht schließen lassen -> RlComStreamAnalyzer.RlComControl.RlComControl.cs:void disConnect()
-            serialPort.Close();
-
-            return false;
-        }
-
         if (string.IsNullOrWhiteSpace(comPortSettings.PortName))
         {
             MessageBox.Show("No Com Port selected.", "Connection Failed", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -347,7 +454,10 @@ public class MainWindowViewModel : PropertyNotifier
         }
         catch (Exception ex)
         {
-            MessageBox.Show(ex.Message, "Connection Failed", MessageBoxButton.OK, MessageBoxImage.Error);
+            if (showErrors)
+                MessageBox.Show(ex.Message, "Connection Failed", MessageBoxButton.OK, MessageBoxImage.Error);
+
+            Debug.WriteLine($"Failed to connect: {ex.Message}");
 
             return false;
         }

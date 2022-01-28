@@ -15,7 +15,7 @@ public class MessageLogViewModel : PropertyNotifier
 
     public ObservableCollection<MessageViewModel> Messages => _messages;
 
-    private MessageViewModel _lastMessage;
+    private MessageViewModel _lastMessage = new();
 
     public readonly object MessagesLock = new();
 
@@ -33,23 +33,15 @@ public class MessageLogViewModel : PropertyNotifier
         }
     }
 
-    private RelayCommand _clearLogCommand;
+    private RelayCommand? _clearLogCommand;
 
     public RelayCommand ClearLogCommand => _clearLogCommand ??= new(async o => await Task.Run(ClearLog));
 
     public MessageLogViewModel()
     {
-        string msg = "Hallo Welt! Ich bin sooooo lang!!!!";
-
-        MessageModel msgMod = new()
-        {
-            MessageMode = MessageMode.Sent,
-            Data = Encoding.ASCII.GetBytes(msg)
-        };
-
-        AddMessage(msgMod, true);
-
         BindingOperations.EnableCollectionSynchronization(_messages, MessagesLock);
+
+        AddEmptyMessage();
     }
 
     private void ClearLog()
@@ -57,9 +49,18 @@ public class MessageLogViewModel : PropertyNotifier
         lock (_messages)
         {
             _messages.Clear();
+            AddEmptyMessage();
         }  
     }
     
+    private void AddEmptyMessage()
+    {
+        AddMessage(new MessageModel()
+        {
+            Data = new byte[0]
+        }, false);
+    }
+
     private void ReformatMessages()
     {
         lock (MessagesLock)
@@ -83,10 +84,7 @@ public class MessageLogViewModel : PropertyNotifier
 
             if (newLastMessage)
             {
-                AddMessage(new MessageModel()
-                {
-                    Data = new byte[0]
-                }, false);
+                AddEmptyMessage();
             }
             else
             {
@@ -138,10 +136,7 @@ public class MessageLogViewModel : PropertyNotifier
                 _lastMessage.MessageModel.MessageMode = mode;
 
             if (_lastMessage.MessageModel.MessageMode != mode)
-                AddMessage(new MessageModel()
-                {
-                    Data = new byte[0]
-                }, false);
+                AddEmptyMessage();
 
             MessageModel message = _lastMessage.MessageModel;
 
@@ -172,74 +167,13 @@ public class MessageLogViewModel : PropertyNotifier
                         message.MessageIndex = ++_receivedMessages;
                     }
 
-                    AddMessage(new MessageModel()
-                    {
-                        Data = new byte[0]
-                    }, false);
+                    AddEmptyMessage();
                     message = _lastMessage.MessageModel;
 
-                    // Cut data until newLine from Span
+                    // Cut line from Span
                     span = span.Slice(newLineIndex + 1);
                 }
             }
         }
-
-        //List<MessageModel> messages = new();
-
-        //void Flush()
-        //{
-        //    if (_newDataBuffer.Length == 0)
-        //        return;
-
-        //    byte[] messageData = _newDataBuffer.ToArray();
-
-        //    messages.Add(new MessageModel()
-        //    {
-        //        Data = messageData,
-        //        MessageMode = _lastMode
-        //    });
-
-        //    _newDataBuffer.SetLength(0);
-        //}
-
-        //lock (_newDataBufferLock)
-        //{
-        //    if (mode != _lastMode)
-        //    {
-        //        Flush();
-        //    }
-
-        //    ReadOnlySpan<byte> span = new ReadOnlySpan<byte>(data);
-
-        //    while (span.Length > 0)
-        //    {
-        //        int newLineIndex = span.IndexOf((byte)'\n');
-
-        //        if (newLineIndex == -1)
-        //        {
-        //            _newDataBuffer.Write(span);
-        //            break;
-        //        }
-        //        else
-        //        {
-        //            ReadOnlySpan<byte> lineSlice = span.Slice(0, newLineIndex + 1);
-
-        //            _newDataBuffer.Write(lineSlice);
-
-        //            Flush();
-
-        //            // Cut data until newLine from Span
-        //            span = span.Slice(newLineIndex + 1);
-        //        }
-        //    }
-        //}
-
-        //if (messages.Count > 0)
-        //{
-        //    foreach (MessageModel message in messages)
-        //    {
-        //        AddMessage(message);
-        //    }
-        //}
     }
 }

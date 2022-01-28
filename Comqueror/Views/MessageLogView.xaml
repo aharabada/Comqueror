@@ -26,6 +26,16 @@
             <CheckBox x:Name="CbAutoScroll" Margin="5" Content="{x:Static p:Strings.CheckBox_AutoScroll}" VerticalContentAlignment="Center"/>
         </StackPanel>
         <DataGrid x:Name="MessageGrid" util:DataGridBehavior.Autoscroll="{Binding IsChecked, ElementName=CbAutoScroll}" Grid.Row="1" AutoGenerateColumns="False" ItemsSource="{Binding Messages}" CanUserAddRows="False">
+            <DataGrid.RowStyle>
+                <Style TargetType="{x:Type DataGridRow}">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding MessageModel.MessageMode}" Value="{x:Static models:MessageMode.None}">
+                            <Setter Property="Visibility" Value="Collapsed" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                    <Setter Property="Visibility" Value="Visible" />
+                </Style>
+            </DataGrid.RowStyle>
             <DataGrid.Columns>
                 <DataGridTemplateColumn Header="{x:Static p:Strings.Header_Column_Source}" Width="auto">
                     <DataGridTemplateColumn.CellTemplate>
