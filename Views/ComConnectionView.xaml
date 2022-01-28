@@ -8,7 +8,7 @@
              xmlns:viewModels="clr-namespace:Comqueror.ViewModels"
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
              xmlns:util="clr-namespace:Comqueror.Utility"
-             xmlns:ports="clr-namespace:System.IO.Ports;assembly=System"
+             xmlns:ports="clr-namespace:RJCP.IO.Ports;assembly=RJCP.SerialPortStream"
              xmlns:p="clr-namespace:Comqueror.Properties"
              mc:Ignorable="d"
              d:DesignHeight="200" d:DesignWidth="500">

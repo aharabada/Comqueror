@@ -1,4 +1,4 @@
-﻿using System.IO.Ports;
+﻿using RJCP.IO.Ports;
 
 namespace Comqueror.Models;
 

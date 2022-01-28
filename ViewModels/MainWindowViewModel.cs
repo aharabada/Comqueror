@@ -3,12 +3,11 @@ using Comqueror.Properties;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
-using System.IO.Ports;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using RJCP.IO.Ports;
 
 namespace Comqueror.ViewModels;
 
@@ -27,8 +26,8 @@ public class MainWindowViewModel : PropertyNotifier
     private bool _forwardHostToDevice;
     private bool _forwardDeviceToHost;
 
-    private SerialPort _hostComPort = new();
-    private SerialPort _deviceComPort = new();
+    private SerialPortStream _hostComPortStream = new();
+    private SerialPortStream _deviceComPortStream = new();
 
     public MessageLogViewModel MessageLogViewModel => _messageLogViewModel;
 
@@ -88,17 +87,17 @@ public class MainWindowViewModel : PropertyNotifier
     public RelayCommand ConnectHostCommand => _connectHostCommand ??=
         new(async (o) =>
         {
-            IsHostConnected = await ConnectAsync(_hostComPortSettings, _hostComPort);
+            IsHostConnected = await ConnectAsync(_hostComPortSettings, _hostComPortStream);
             if (IsHostConnected)
-                RegisterHostPortEvents(_hostComPort);
+                RegisterHostPortEvents(_hostComPortStream);
         });
 
     public RelayCommand ConnectDeviceCommand => _connectDeviceCommand ??= 
         new(async (o) => 
         {
-            IsDeviceConnected = await ConnectAsync(_deviceComPortSettings, _deviceComPort);
+            IsDeviceConnected = await ConnectAsync(_deviceComPortSettings, _deviceComPortStream);
             if (IsDeviceConnected)
-                RegisterDevicePortEvents(_deviceComPort);
+                RegisterDevicePortEvents(_deviceComPortStream);
         });
 
     public RelayCommand SendMessageCommand => _sendMessageCommand ??=
@@ -160,7 +159,7 @@ public class MainWindowViewModel : PropertyNotifier
             if (data == null)
                 return;
 
-            _deviceComPort.Write(data, 0, data.Length);
+            _deviceComPortStream.Write(data, 0, data.Length);
 
             MessageLogViewModel.LogData(data, MessageMode.Sent);
 
@@ -170,16 +169,16 @@ public class MainWindowViewModel : PropertyNotifier
         });
     }
 
-    private void RegisterHostPortEvents(SerialPort hostComPort)
+    private void RegisterHostPortEvents(SerialPortStream hostComPort)
     {
         hostComPort.DataReceived += async (s, e) =>
         {
-            SerialPort port = (SerialPort)s;
+            SerialPortStream port = (SerialPortStream)s;
 
             int bytesAvailable = port.BytesToRead;
             byte[] data = new byte[bytesAvailable];
 
-            int i = await port.BaseStream.ReadAsync(data);
+            int i = await port.ReadAsync(data);
 
             Debug.WriteLine($"Read {i} bytes from Host.");
 
@@ -189,30 +188,30 @@ public class MainWindowViewModel : PropertyNotifier
 
                 Array.Resize(ref data, data.Length + bytesAvailable);
 
-                i = await port.BaseStream.ReadAsync(data, oldLength, bytesAvailable);
+                i = await port.ReadAsync(data, oldLength, bytesAvailable);
 
                 Debug.WriteLine($"Read additional {i} bytes from Host.");
             }
 
             MessageLogViewModel.LogData(data, MessageMode.Sent);
 
-            if (ForwardHostToDevice && _deviceComPort.IsOpen)
+            if (ForwardHostToDevice && _deviceComPortStream.IsOpen)
             {
-                _deviceComPort.Write(data, 0, data.Length);
+                _deviceComPortStream.Write(data, 0, data.Length);
             }
         };
     }
 
-    private void RegisterDevicePortEvents(SerialPort deviceComPort)
+    private void RegisterDevicePortEvents(SerialPortStream deviceComPort)
     {
         deviceComPort.DataReceived += async (s, e) =>
         {
-            SerialPort port = (SerialPort)s;
+            SerialPortStream port = (SerialPortStream)s;
 
             int bytesAvailable = port.BytesToRead;
             byte[] data = new byte[bytesAvailable];
 
-            int i = await port.BaseStream.ReadAsync(data);
+            int i = await port.ReadAsync(data);
 
             Debug.WriteLine($"Read {i} bytes from Device.");
 
@@ -222,16 +221,16 @@ public class MainWindowViewModel : PropertyNotifier
 
                 Array.Resize(ref data, data.Length + bytesAvailable);
 
-                i = await port.BaseStream.ReadAsync(data, oldLength, bytesAvailable);
+                i = await port.ReadAsync(data, oldLength, bytesAvailable);
 
                 Debug.WriteLine($"Read additional {i} bytes from Device.");
             }
 
             MessageLogViewModel.LogData(data, MessageMode.Received);
 
-            if (ForwardDeviceToHost && _hostComPort.IsOpen)
+            if (ForwardDeviceToHost && _hostComPortStream.IsOpen)
             {
-                _hostComPort.Write(data, 0, data.Length);
+                _hostComPortStream.Write(data, 0, data.Length);
             }
         };
     }
@@ -267,13 +266,13 @@ public class MainWindowViewModel : PropertyNotifier
 
             comPortModel.BaudRate = BaudRate;
 
-            comPortModel.Parity = Enum.TryParse(Parity, out Parity parity) ? parity : System.IO.Ports.Parity.None;
+            comPortModel.Parity = Enum.TryParse(Parity, out Parity parity) ? parity : RJCP.IO.Ports.Parity.None;
 
             comPortModel.DataBits = DataBits;
 
-            comPortModel.StopBits = Enum.TryParse(StopBits, out StopBits stopBits) ? stopBits : System.IO.Ports.StopBits.One;
+            comPortModel.StopBits = Enum.TryParse(StopBits, out StopBits stopBits) ? stopBits : RJCP.IO.Ports.StopBits.One;
 
-            comPortModel.Handshake = Enum.TryParse(Handshake, out Handshake handshake) ? handshake : System.IO.Ports.Handshake.None;
+            comPortModel.Handshake = Enum.TryParse(Handshake, out Handshake handshake) ? handshake : RJCP.IO.Ports.Handshake.None;
         }
     }
 
@@ -304,12 +303,12 @@ public class MainWindowViewModel : PropertyNotifier
         lastDevicePortSettings.FillComPortModel(deviceComPortSettings, DeviceComConnectionViewModel.PortNames);
     }
 
-    private Task<bool> ConnectAsync(ComPortModel comPortSettings, SerialPort serialPort)
+    private Task<bool> ConnectAsync(ComPortModel comPortSettings, SerialPortStream serialPort)
     {
         return Task.Run(() => Connect(comPortSettings, serialPort));
     }
 
-    private bool Connect(ComPortModel comPortSettings, SerialPort serialPort)
+    private bool Connect(ComPortModel comPortSettings, SerialPortStream serialPort)
     {
         if (serialPort.IsOpen)
         {

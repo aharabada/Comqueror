@@ -1,4 +1,5 @@
 ﻿using Comqueror.Models;
+using RJCP.IO.Ports;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO.Ports;
@@ -101,15 +102,14 @@ public class ComConnectionViewModel : PropertyNotifier
     /// </summary>
     private void UpdateComPorts()
     {
-        string[] portNames = SerialPort.GetPortNames();
+        string[] portNames = SerialPortStream.GetPortNames();
 
         for (int i = 0; i < _portNames.Count; i++)
         {
-            SkipIncrement:
             if (!portNames.Contains(_portNames[i]))
             {
                 _portNames.RemoveAt(i);
-                goto SkipIncrement;
+                i--;
             }
         }
 
