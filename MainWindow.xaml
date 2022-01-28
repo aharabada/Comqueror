@@ -29,6 +29,20 @@
         </GroupBox>
 
         <StackPanel Grid.Column="1" Grid.Row="0" Margin="5" VerticalAlignment="Center">
+            <StackPanel.Style>
+                <Style TargetType="{x:Type StackPanel}">
+                    <Style.Triggers>
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding IsHostConnected}" Value="True" />
+                                <Condition Binding="{Binding IsDeviceConnected}" Value="True" />
+                            </MultiDataTrigger.Conditions>
+                            <Setter Property="IsEnabled" Value="True"/>
+                        </MultiDataTrigger>
+                    </Style.Triggers>
+                    <Setter Property="IsEnabled" Value="False"/>
+                </Style>
+            </StackPanel.Style>
             <CheckBox Margin="5" Content="FWD&gt;&gt;&gt;" IsChecked="{Binding ForwardHostToDevice}"/>
             <CheckBox Margin="5" Content="&lt;&lt;&lt;FWD" IsChecked="{Binding ForwardDeviceToHost}"/>
         </StackPanel>

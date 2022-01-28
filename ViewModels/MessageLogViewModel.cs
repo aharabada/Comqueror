@@ -112,6 +112,11 @@ public class MessageLogViewModel : PropertyNotifier
 
             message.Data = msgData;
 
+            if (message.MessageMode == MessageMode.None)
+            {
+                message.MessageMode = mode;
+            }
+
             _lastMessage.ReformatMessage(_messageBytesPerRow);
         }
 
@@ -136,11 +141,6 @@ public class MessageLogViewModel : PropertyNotifier
 
                 if (newLineIndex == -1)
                 {
-                    if (message.MessageMode == MessageMode.None)
-                    {
-                        message.MessageMode = mode;
-                    }
-
                     AppendSpan(message, span);
 
                     break;

@@ -89,14 +89,16 @@ public class MainWindowViewModel : PropertyNotifier
         new((o) =>
         {
             IsHostConnected = Connect(_hostComPortSettings, _hostComPort);
+            if (IsHostConnected)
+                RegisterHostPortEvents(_hostComPort);
         });
 
     public RelayCommand ConnectDeviceCommand => _connectDeviceCommand ??= 
         new((o) =>
         {
             IsDeviceConnected = Connect(_deviceComPortSettings, _deviceComPort);
-            //if (IsDeviceConnected)
-            //    RegisterDevicePortEvents(_deviceComPort);
+            if (IsDeviceConnected)
+                RegisterDevicePortEvents(_deviceComPort);
         });
 
     public RelayCommand SendMessageCommand => _sendMessageCommand ??=
@@ -168,32 +170,70 @@ public class MainWindowViewModel : PropertyNotifier
         });
     }
 
+    private void RegisterHostPortEvents(SerialPort hostComPort)
+    {
+        hostComPort.DataReceived += async (s, e) =>
+        {
+            SerialPort port = (SerialPort)s;
+
+            int bytesAvailable = port.BytesToRead;
+            byte[] data = new byte[bytesAvailable];
+
+            int i = await port.BaseStream.ReadAsync(data);
+
+            Debug.WriteLine($"Read {i} bytes from Host.");
+
+            while ((bytesAvailable = port.BytesToRead) > 0)
+            {
+                int oldLength = data.Length;
+
+                Array.Resize(ref data, data.Length + bytesAvailable);
+
+                i = await port.BaseStream.ReadAsync(data, oldLength, bytesAvailable);
+
+                Debug.WriteLine($"Read additional {i} bytes from Host.");
+            }
+
+            MessageLogViewModel.LogData(data, MessageMode.Sent);
+
+            if (ForwardHostToDevice && _deviceComPort.IsOpen)
+            {
+                _deviceComPort.Write(data, 0, data.Length);
+            }
+        };
+    }
+
     private void RegisterDevicePortEvents(SerialPort deviceComPort)
     {
         deviceComPort.DataReceived += async (s, e) =>
         {
             SerialPort port = (SerialPort)s;
 
-            byte[] data = new byte[port.BytesToRead];
+            int bytesAvailable = port.BytesToRead;
+            byte[] data = new byte[bytesAvailable];
 
             int i = await port.BaseStream.ReadAsync(data);
 
-            Debug.WriteLine($"Read {i} bytes from Device. There are {port.BytesToRead} new bytes available.");
+            Debug.WriteLine($"Read {i} bytes from Device.");
 
-            //Debug.Assert(port.BytesToRead == 0);
+            while ((bytesAvailable = port.BytesToRead) > 0)
+            {
+                int oldLength = data.Length;
 
-            //int bytesAvailable;
-            //while ((bytesAvailable = port.BytesToRead) > 0)
-            //{
-            //    int oldLength = data.Length;
+                Array.Resize(ref data, data.Length + bytesAvailable);
 
-            //    Array.Resize(ref data, data.Length + bytesAvailable);
+                i = await port.BaseStream.ReadAsync(data, oldLength, bytesAvailable);
 
+                Debug.WriteLine($"Read additional {i} bytes from Device.");
+            }
 
-            //}
+            MessageLogViewModel.LogData(data, MessageMode.Received);
+
+            if (ForwardDeviceToHost && _hostComPort.IsOpen)
+            {
+                _hostComPort.Write(data, 0, data.Length);
+            }
         };
-
-
     }
 
     public MainWindowViewModel()
@@ -297,44 +337,6 @@ public class MainWindowViewModel : PropertyNotifier
 
         try
         {
-            serialPort.DataReceived += async (s, e) =>
-            {
-                //Task.Delay(125);
-
-                SerialPort port = (SerialPort)s;
-
-                int bytesAvailable = port.BytesToRead;
-                byte[] data = new byte[bytesAvailable];
-
-                int i = await port.BaseStream.ReadAsync(data);
-                
-                Debug.WriteLine($"Read {i} bytes from Device.");
-
-                while ((bytesAvailable = port.BytesToRead) > 0)
-                {
-                    int oldLength = data.Length;
-
-                    Array.Resize(ref data, data.Length + bytesAvailable);
-
-                    i = await port.BaseStream.ReadAsync(data, oldLength, bytesAvailable);
-
-                    Debug.WriteLine($"Read additional {i} bytes from Device.");
-                }
-
-                MessageLogViewModel.LogData(data, MessageMode.Received);
-
-                //Debug.WriteLine($"Read {i} bytes from Device. There are {port.BytesToRead} new bytes available.");
-
-                //Debug.Assert(port.BytesToRead == 0);
-
-                //int bytesAvailable;
-                //while ((bytesAvailable = port.BytesToRead) > 0)
-                //{
-                //    int oldLength = data.Length;
-
-                //    Array.Resize(ref data, data.Length + bytesAvailable);
-                //}
-            };
             serialPort.Open();
 
             return true;
