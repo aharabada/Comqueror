@@ -21,6 +21,9 @@ public class MessageLogViewModel : PropertyNotifier
 
     private int _messageBytesPerRow = 0;
 
+    int _receivedMessages = 0;
+    int _sentMessages = 0;
+
     public int MessageBytesPerRow
     {
         get => _messageBytesPerRow;
@@ -48,6 +51,8 @@ public class MessageLogViewModel : PropertyNotifier
     {
         lock (_messages)
         {
+            _receivedMessages = 0;
+            _sentMessages = 0;
             _messages.Clear();
             AddEmptyMessage();
         }  
@@ -90,16 +95,15 @@ public class MessageLogViewModel : PropertyNotifier
         }
     }
 
-    int _receivedMessages = 0;
-    int _sentMessages = 0;
-
     internal void LogData(byte[] data, MessageMode mode)
     {
         if (data.Length == 0)
             return;
 
-        void AppendSpan(MessageModel message, ReadOnlySpan<byte> data)
+        void AppendSpan(ReadOnlySpan<byte> data)
         {
+            MessageModel message = _lastMessage.MessageModel;
+
             int oldLength = message.Data.Length;
 
             byte[] msgData = message.Data;
@@ -129,13 +133,9 @@ public class MessageLogViewModel : PropertyNotifier
 
         lock (MessagesLock)
         {
-            if (_lastMessage.MessageModel.MessageMode == MessageMode.None)
-                _lastMessage.MessageModel.MessageMode = mode;
-
-            if (_lastMessage.MessageModel.MessageMode != mode)
+            if (_lastMessage.MessageModel.MessageMode != MessageMode.None && 
+                _lastMessage.MessageModel.MessageMode != mode)
                 AddEmptyMessage();
-
-            MessageModel message = _lastMessage.MessageModel;
 
             ReadOnlySpan<byte> span = new(data);
 
@@ -145,7 +145,7 @@ public class MessageLogViewModel : PropertyNotifier
 
                 if (newLineIndex == -1)
                 {
-                    AppendSpan(message, span);
+                    AppendSpan(span);
 
                     break;
                 }
@@ -153,19 +153,9 @@ public class MessageLogViewModel : PropertyNotifier
                 {
                     ReadOnlySpan<byte> lineSlice = span.Slice(0, newLineIndex + 1);
 
-                    AppendSpan(message, lineSlice);
-
-                    if (mode == MessageMode.Sent)
-                    {
-                        message.MessageIndex = ++_sentMessages;
-                    }
-                    else if (mode == MessageMode.Received)
-                    {
-                        message.MessageIndex = ++_receivedMessages;
-                    }
+                    AppendSpan(lineSlice);
 
                     AddEmptyMessage();
-                    message = _lastMessage.MessageModel;
 
                     // Cut line from Span
                     span = span.Slice(newLineIndex + 1);
