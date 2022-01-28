@@ -11,12 +11,11 @@ public static class DataGridBehavior
     public static readonly DependencyProperty AutoscrollProperty = DependencyProperty.RegisterAttached(
         "Autoscroll", typeof(bool), typeof(DataGridBehavior), new PropertyMetadata(default(bool), AutoscrollChangedCallback));
 
-    private static readonly Dictionary<DataGrid, NotifyCollectionChangedEventHandler> handlersDict = new Dictionary<DataGrid, NotifyCollectionChangedEventHandler>();
+    private static readonly Dictionary<DataGrid, NotifyCollectionChangedEventHandler> handlersDict = new();
 
     private static void AutoscrollChangedCallback(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs args)
     {
-        var dataGrid = dependencyObject as DataGrid;
-        if (dataGrid == null)
+        if (dependencyObject is not DataGrid dataGrid)
         {
             throw new InvalidOperationException("Dependency object is not DataGrid.");
         }
@@ -45,12 +44,11 @@ public static class DataGridBehavior
 
     private static void Unsubscribe(DataGrid dataGrid)
     {
-        NotifyCollectionChangedEventHandler handler;
-        handlersDict.TryGetValue(dataGrid, out handler);
-        if (handler == null)
-        {
+        handlersDict.TryGetValue(dataGrid, out NotifyCollectionChangedEventHandler? handler);
+
+        if (!handlersDict.TryGetValue(dataGrid, out handler) || handler == null)
             return;
-        }
+
         ((INotifyCollectionChanged)dataGrid.Items).CollectionChanged -= handler;
         handlersDict.Remove(dataGrid);
     }
@@ -79,7 +77,7 @@ public static class DataGridBehavior
         {
             return;
         }
-        datagrid.ScrollIntoView(datagrid.Items[datagrid.Items.Count - 1]);
+        datagrid.ScrollIntoView(datagrid.Items[^1]);
     }
 
     public static void SetAutoscroll(DependencyObject element, bool value)

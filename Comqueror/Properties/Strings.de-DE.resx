@@ -220,4 +220,22 @@
   <data name="Error_HexNumberTooLong" xml:space="preserve">
     <value>Eine Hex-Zahl muss zwei Ziffern haben!</value>
   </data>
+  <data name="Error_NotConnected" xml:space="preserve">
+    <value>Es muss erst ein Com-Port geöffnet werden bevor Daten gesendet werden können.</value>
+  </data>
+  <data name="Enum_Handshake.RequestToSend" xml:space="preserve">
+    <value>RTS</value>
+  </data>
+  <data name="Enum_Handshake.RequestToSendXOnXOff" xml:space="preserve">
+    <value>RTS + XOn / XOff</value>
+  </data>
+  <data name="Enum_Handshake.XOnXOff" xml:space="preserve">
+    <value>XOn / XOff</value>
+  </data>
+  <data name="Enum_Parity.Mark" xml:space="preserve">
+    <value>Mark (1)</value>
+  </data>
+  <data name="Enum_Parity.Space" xml:space="preserve">
+    <value>Space (0)</value>
+  </data>
 </root>

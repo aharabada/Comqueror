@@ -261,4 +261,7 @@
   <data name="Error_HexNumberTooLong" xml:space="preserve">
     <value>A hex number must have two digits!</value>
   </data>
+  <data name="Error_NotConnected" xml:space="preserve">
+    <value>You have to connect to a com port before sending data.</value>
+  </data>
 </root>

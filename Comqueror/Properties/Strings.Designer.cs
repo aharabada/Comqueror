@@ -277,6 +277,15 @@ namespace Comqueror.Properties {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die You have to connect to a com port before sending data. ähnelt.
+        /// </summary>
+        public static string Error_NotConnected {
+            get {
+                return ResourceManager.GetString("Error_NotConnected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die {0} Baud ähnelt.
         /// </summary>
         public static string Format_Baud {

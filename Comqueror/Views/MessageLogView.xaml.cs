@@ -30,7 +30,7 @@ public partial class MessageLogView : UserControl
     TextBlock? AsciiHeaderTextBlock;
     Rectangle? AsciiHeaderRect;
 
-    private MessageLogViewModel _viewModel;
+    private MessageLogViewModel? _viewModel;
 
     public MessageLogView()
     {
@@ -58,7 +58,7 @@ public partial class MessageLogView : UserControl
     /// </summary>
     private void FindBytesPerRow()
     {
-        if (HexHeaderTextBlock == null || AsciiHeaderTextBlock == null || HexHeaderRect == null || AsciiHeaderRect == null)
+        if (_viewModel == null || HexHeaderTextBlock == null || AsciiHeaderTextBlock == null || HexHeaderRect == null || AsciiHeaderRect == null)
             return;
 
         int hexNumbersPerRow = FindHexNumsPerRow(HexHeaderRect.ActualWidth);
@@ -98,6 +98,8 @@ public partial class MessageLogView : UserControl
     /// <returns>The number of hex bytes that fits into the column.</returns>
     private int FindHexNumsPerRow(double width)
     {
+        Debug.Assert(HexHeaderTextBlock != null);
+
         int hexTargetNums = 0;
 
         string? header = null;
@@ -137,6 +139,8 @@ public partial class MessageLogView : UserControl
     /// <returns>The number of ascii chars that fits into the column.</returns>
     private int FindAsciiCharsPerRow(double width)
     {
+        Debug.Assert(AsciiHeaderTextBlock != null);
+
         int asciiChars = 0;
 
         string? header = null;
@@ -169,7 +173,7 @@ public partial class MessageLogView : UserControl
         return asciiChars;
     }
 
-    private Size MeasureHeaderString(string candidate, TextBlock tbHeader)
+    private static Size MeasureHeaderString(string candidate, TextBlock tbHeader)
     {
         var formattedText = new FormattedText(
             candidate,
@@ -184,7 +188,7 @@ public partial class MessageLogView : UserControl
         return new Size(formattedText.Width, formattedText.Height);
     }
 
-    private int StartOfLine(string text, int index)
+    private static int StartOfLine(string text, int index)
     {
         while (true)
         {
@@ -200,7 +204,7 @@ public partial class MessageLogView : UserControl
 
     private void TxtBla(object sender, RoutedEventArgs e)
     {
-        if (!(sender is TextBox textBox))
+        if (sender is not TextBox textBox)
             return;
 
         //Debug.WriteLine($"{textBox.SelectionStart} | {textBox.SelectionLength}");

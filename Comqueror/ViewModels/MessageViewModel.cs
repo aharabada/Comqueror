@@ -5,7 +5,7 @@ namespace Comqueror.ViewModels;
 
 public class MessageViewModel : PropertyNotifier
 {
-    private MessageModel _messageModel;
+    private MessageModel _messageModel = new();
 
     public MessageModel MessageModel
     {

@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.Text;
 
 namespace Comqueror.Models;
@@ -12,7 +13,7 @@ public enum MessageMode
 
 public class MessageModel : PropertyNotifier
 {
-    private byte[] _data;
+    private byte[] _data = Array.Empty<byte>();
     private MessageMode _messageMode;
 
     private int _messageIndex;

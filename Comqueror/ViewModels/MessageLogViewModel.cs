@@ -55,10 +55,7 @@ public class MessageLogViewModel : PropertyNotifier
     
     private void AddEmptyMessage()
     {
-        AddMessage(new MessageModel()
-        {
-            Data = new byte[0]
-        }, false);
+        AddMessage(new MessageModel(), false);
     }
 
     private void ReformatMessages()
@@ -140,7 +137,7 @@ public class MessageLogViewModel : PropertyNotifier
 
             MessageModel message = _lastMessage.MessageModel;
 
-            ReadOnlySpan<byte> span = new ReadOnlySpan<byte>(data);
+            ReadOnlySpan<byte> span = new(data);
 
             while (span.Length > 0)
             {
