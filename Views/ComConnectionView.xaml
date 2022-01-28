@@ -12,9 +12,6 @@
              xmlns:p="clr-namespace:Comqueror.Properties"
              mc:Ignorable="d"
              d:DesignHeight="200" d:DesignWidth="500">
-    <UserControl.Resources>
-        <util:EnumToStringConverter x:Key="EnumToStringConverter"/>
-    </UserControl.Resources>
     <UserControl.DataContext>
         <viewModels:ComConnectionViewModel/>
     </UserControl.DataContext>

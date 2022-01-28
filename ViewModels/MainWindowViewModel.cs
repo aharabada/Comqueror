@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.IO;
 using System.IO.Ports;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -82,11 +83,14 @@ public class MainWindowViewModel : PropertyNotifier
     private RelayCommand? _connectHostCommand;
     private RelayCommand? _connectDeviceCommand;
 
+    private RelayCommand? _sendMessageCommand;
+
     public RelayCommand ConnectHostCommand => _connectHostCommand ??=
         new((o) =>
         {
             IsHostConnected = Connect(_hostComPortSettings, _hostComPort);
         });
+
     public RelayCommand ConnectDeviceCommand => _connectDeviceCommand ??= 
         new((o) =>
         {
@@ -94,6 +98,75 @@ public class MainWindowViewModel : PropertyNotifier
             //if (IsDeviceConnected)
             //    RegisterDevicePortEvents(_deviceComPort);
         });
+
+    public RelayCommand SendMessageCommand => _sendMessageCommand ??=
+        new(async o => await SendMessageAsync(o));
+
+    private async Task SendMessageAsync(object parameters)
+    {
+        await Task.Run(() =>
+        {
+            Stopwatch sw = Stopwatch.StartNew();
+
+            object[] param = (object[])parameters;
+
+            string message = (string)param[0];
+            MessageType messageType = (MessageType)param[1];
+            bool appendCarriageReturn = (bool)param[2];
+            bool appendNewLine = (bool)param[3];
+
+            if (appendCarriageReturn)
+                message += "\r";
+
+            if (appendNewLine)
+                message += "\n";
+
+            byte[]? data = null;
+
+            if (messageType == MessageType.Ascii)
+            {
+                data = Encoding.ASCII.GetBytes(message);
+            }
+            else if (messageType == MessageType.Hex)
+            {
+                string[] splits = message.Split(' ', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+
+                data = new byte[splits.Length];
+
+                for (int i = 0; i < splits.Length; i++)
+                {
+                    string split = splits[i];
+
+                    if (split.Length != 2)
+                    {
+                        MessageBox.Show(Strings.Error_HexNumberTooLong);
+
+                        return;
+                    }
+
+                    if (byte.TryParse(split, out data[i]))
+                    {
+                        string error = string.Format(Strings.Error_InvalidHexNumber, split);
+
+                        MessageBox.Show(error);
+
+                        return;
+                    }
+                }
+            }
+
+            if (data == null)
+                return;
+
+            _deviceComPort.Write(data, 0, data.Length);
+
+            MessageLogViewModel.LogData(data, MessageMode.Sent);
+
+            sw.Stop();
+
+            Debug.WriteLine($"{sw.Elapsed.TotalMilliseconds} ms");
+        });
+    }
 
     private void RegisterDevicePortEvents(SerialPort deviceComPort)
     {
@@ -226,7 +299,7 @@ public class MainWindowViewModel : PropertyNotifier
         {
             serialPort.DataReceived += async (s, e) =>
             {
-                Task.Delay(125);
+                //Task.Delay(125);
 
                 SerialPort port = (SerialPort)s;
 
@@ -248,7 +321,7 @@ public class MainWindowViewModel : PropertyNotifier
                     Debug.WriteLine($"Read additional {i} bytes from Device.");
                 }
 
-                MessageLogViewModel.ReceivedData(data, MessageMode.Received);
+                MessageLogViewModel.LogData(data, MessageMode.Received);
 
                 //Debug.WriteLine($"Read {i} bytes from Device. There are {port.BytesToRead} new bytes available.");
 

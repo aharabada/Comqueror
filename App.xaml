@@ -3,10 +3,12 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:Comqueror"
              xmlns:viewModels="clr-namespace:Comqueror.ViewModels"
+             xmlns:util="clr-namespace:Comqueror.Utility"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
         <ResourceDictionary>
             <viewModels:MainWindowViewModel x:Key="MainViewModel"/>
+            <util:EnumToStringConverter x:Key="EnumToStringConverter"/>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

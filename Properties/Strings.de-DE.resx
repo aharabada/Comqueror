@@ -184,4 +184,40 @@
   <data name="Group_Header_Messages" xml:space="preserve">
     <value>Nachrichten</value>
   </data>
+  <data name="Group_Header_Send" xml:space="preserve">
+    <value>Senden</value>
+  </data>
+  <data name="Label_Message" xml:space="preserve">
+    <value>Nachricht:</value>
+  </data>
+  <data name="Button_Send" xml:space="preserve">
+    <value>Senden</value>
+  </data>
+  <data name="Enum_MessageType.Ascii" xml:space="preserve">
+    <value>Ascii</value>
+  </data>
+  <data name="Enum_MessageType.Hex" xml:space="preserve">
+    <value>Hex</value>
+  </data>
+  <data name="Label_MessageType" xml:space="preserve">
+    <value>Nachrichtentyp:</value>
+  </data>
+  <data name="Button_Send_LF" xml:space="preserve">
+    <value>Senden (LF)</value>
+  </data>
+  <data name="Button_Send_CR" xml:space="preserve">
+    <value>Senden (CR/LF)</value>
+  </data>
+  <data name="Label_Append_Newline" xml:space="preserve">
+    <value>\n anfügen</value>
+  </data>
+  <data name="Label_Append_CarriageReturn" xml:space="preserve">
+    <value>\r anfügen</value>
+  </data>
+  <data name="Error_InvalidHexNumber" xml:space="preserve">
+    <value>{0} ist keine gültige Hex-Zahl!</value>
+  </data>
+  <data name="Error_HexNumberTooLong" xml:space="preserve">
+    <value>Eine Hex-Zahl muss zwei Ziffern haben!</value>
+  </data>
 </root>

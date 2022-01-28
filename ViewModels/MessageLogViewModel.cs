@@ -95,7 +95,7 @@ public class MessageLogViewModel : PropertyNotifier
         }
     }
 
-    internal void ReceivedData(byte[] data, MessageMode mode)
+    internal void LogData(byte[] data, MessageMode mode)
     {
         if (data.Length == 0)
             return;
@@ -136,6 +136,11 @@ public class MessageLogViewModel : PropertyNotifier
 
                 if (newLineIndex == -1)
                 {
+                    if (message.MessageMode == MessageMode.None)
+                    {
+                        message.MessageMode = mode;
+                    }
+
                     AppendSpan(message, span);
 
                     break;

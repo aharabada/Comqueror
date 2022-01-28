@@ -32,8 +32,8 @@
             <CheckBox Margin="5" Content="FWD&gt;&gt;&gt;" IsChecked="{Binding ForwardHostToDevice}"/>
             <CheckBox Margin="5" Content="&lt;&lt;&lt;FWD" IsChecked="{Binding ForwardDeviceToHost}"/>
         </StackPanel>
-
-        <GroupBox Grid.Column="2" Grid.Row="0"
+        
+        <GroupBox Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="0"
                   Header="{x:Static p:Strings.Group_Header_DeviceConnection}">
             <views:ComConnectionView DataContext="{Binding DeviceComConnectionViewModel}" 
                                      ConnectCommand="{Binding DataContext.ConnectDeviceCommand, 
@@ -41,8 +41,21 @@
                                      IsConnected="{Binding DataContext.IsDeviceConnected, 
                 RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:MainWindow}}}"/>
         </GroupBox>
-        <GroupBox Grid.ColumnSpan="3" Grid.Row="1" Header="{x:Static p:Strings.Group_Header_Messages}">
-            <views:MessageLogView DataContext="{Binding MessageLogViewModel}"/>
-        </GroupBox>
+
+        <Grid Grid.ColumnSpan="3" Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="3*" />
+                <ColumnDefinition Width="5" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <GroupBox Grid.Column="0" Header="{x:Static p:Strings.Group_Header_Messages}">
+                <views:MessageLogView DataContext="{Binding MessageLogViewModel}"/>
+            </GroupBox>
+            <GridSplitter Grid.Column="1" ResizeDirection="Columns" Height="auto" HorizontalAlignment="Stretch"/>
+            <GroupBox Grid.Column="2" Header="{x:Static p:Strings.Group_Header_Send}">
+                <views:SendMessageView SendCommand="{Binding DataContext.SendMessageCommand, 
+                RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:MainWindow}}}"/>
+            </GroupBox>
+        </Grid>
     </Grid>
 </Window>

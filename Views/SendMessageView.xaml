@@ -1,0 +1,64 @@
+﻿<UserControl x:Class="Comqueror.Views.SendMessageView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Comqueror.Views"
+             xmlns:prop="clr-namespace:Comqueror.Properties"
+             xmlns:util="clr-namespace:Comqueror.Utility"
+             xmlns:Comqueror="clr-namespace:Comqueror"
+             xmlns:viewModels="clr-namespace:Comqueror.ViewModels"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             mc:Ignorable="d"
+             d:DesignHeight="200" d:DesignWidth="400">
+    <UserControl.Resources>
+        <local:YourConverter x:Key="YourConverter"/>
+    </UserControl.Resources>
+    <UserControl.DataContext>
+        <viewModels:SendMessageViewModel />
+    </UserControl.DataContext>
+    <Grid x:Name="MainGrid" SizeChanged="MainGrid_SizeChanged">
+        <Grid.RowDefinitions>
+            <RowDefinition x:Name="Row0" Height="auto"/>
+            <RowDefinition x:Name="TextRow" Height="auto" MinHeight="25"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Row 0 -->
+            <TextBlock Grid.Row="0" Margin="5 5 5 0" Text="{x:Static prop:Strings.Label_Message}" />
+        <!-- Row 1 -->
+        <TextBox x:Name="TxtMessage" AcceptsReturn="True" Grid.Row="1" Margin="5 0 5 5" Text="{Binding Message}" VerticalScrollBarVisibility="Visible" TextWrapping="Wrap" />
+        <GridSplitter Grid.Row="1" Grid.ColumnSpan="2" ResizeDirection="Rows" HorizontalAlignment="Stretch" 
+                      VerticalAlignment="Bottom" Height="4" BorderThickness="0,0,0,1" BorderBrush="Gray" 
+                      Background="Transparent" />
+
+        <!-- Row 2 -->
+        <StackPanel x:Name="OptionsPanel" Grid.Row="2">
+            <DockPanel LastChildFill="True">
+                <TextBlock Margin="5 5 5 0" Text="{x:Static prop:Strings.Label_MessageType}" />
+                <ComboBox Margin="5"
+                  SelectedValue="{Binding MessageType, Converter={StaticResource EnumToStringConverter}}"
+                  ItemsSource="{util:Enumerate {x:Type Comqueror:MessageType}}" />
+            </DockPanel>
+            <WrapPanel>
+                <CheckBox Margin="5" Content="{x:Static prop:Strings.Label_Append_CarriageReturn}"
+                      IsChecked="{Binding AppendCarriageReturn}" />
+                <CheckBox Margin="5" Content="{x:Static prop:Strings.Label_Append_Newline}"
+                      IsChecked="{Binding AppendNewLine}" />
+            </WrapPanel>
+            <Button Grid.Column="0" Margin="5" Padding="5 0"
+                Content="{x:Static prop:Strings.Button_Send}"
+                Command="{Binding SendCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:SendMessageView}}}"
+                >
+                <Button.CommandParameter>
+                    <MultiBinding Converter="{StaticResource YourConverter}">
+                        <Binding Path="Message" />
+                        <Binding Path="MessageType" />
+                        <Binding Path="AppendCarriageReturn" />
+                        <Binding Path="AppendNewLine" />
+                    </MultiBinding>
+                </Button.CommandParameter>
+            </Button>
+        </StackPanel>
+    </Grid>
+</UserControl>

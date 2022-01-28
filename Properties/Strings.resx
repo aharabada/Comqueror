@@ -225,4 +225,40 @@
   <data name="Group_Header_Messages" xml:space="preserve">
     <value>Messages</value>
   </data>
+  <data name="Group_Header_Send" xml:space="preserve">
+    <value>Send</value>
+  </data>
+  <data name="Label_Message" xml:space="preserve">
+    <value>Message:</value>
+  </data>
+  <data name="Button_Send" xml:space="preserve">
+    <value>Send</value>
+  </data>
+  <data name="Enum_MessageType.Ascii" xml:space="preserve">
+    <value>Ascii</value>
+  </data>
+  <data name="Enum_MessageType.Hex" xml:space="preserve">
+    <value>Hex</value>
+  </data>
+  <data name="Label_MessageType" xml:space="preserve">
+    <value>Message type:</value>
+  </data>
+  <data name="Button_Send_LF" xml:space="preserve">
+    <value>Send (LF)</value>
+  </data>
+  <data name="Button_Send_CR" xml:space="preserve">
+    <value>Send (CR/LF)</value>
+  </data>
+  <data name="Label_Append_Newline" xml:space="preserve">
+    <value>Append \n</value>
+  </data>
+  <data name="Label_Append_CarriageReturn" xml:space="preserve">
+    <value>Append \r</value>
+  </data>
+  <data name="Error_InvalidHexNumber" xml:space="preserve">
+    <value>{0} is not a valid hex number!</value>
+  </data>
+  <data name="Error_HexNumberTooLong" xml:space="preserve">
+    <value>A hex number must have two digits!</value>
+  </data>
 </root>

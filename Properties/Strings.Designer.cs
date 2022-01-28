@@ -88,6 +88,33 @@ namespace Comqueror.Properties {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Send ähnelt.
+        /// </summary>
+        public static string Button_Send {
+            get {
+                return ResourceManager.GetString("Button_Send", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Send (CR/LF) ähnelt.
+        /// </summary>
+        public static string Button_Send_CR {
+            get {
+                return ResourceManager.GetString("Button_Send_CR", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Send (LF) ähnelt.
+        /// </summary>
+        public static string Button_Send_LF {
+            get {
+                return ResourceManager.GetString("Button_Send_LF", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die Auto scroll ähnelt.
         /// </summary>
         public static string CheckBox_AutoScroll {
@@ -129,6 +156,24 @@ namespace Comqueror.Properties {
         public static string Enum_Handshake_XOnXOff {
             get {
                 return ResourceManager.GetString("Enum_Handshake.XOnXOff", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Ascii ähnelt.
+        /// </summary>
+        public static string Enum_MessageType_Ascii {
+            get {
+                return ResourceManager.GetString("Enum_MessageType.Ascii", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Hex ähnelt.
+        /// </summary>
+        public static string Enum_MessageType_Hex {
+            get {
+                return ResourceManager.GetString("Enum_MessageType.Hex", resourceCulture);
             }
         }
         
@@ -214,6 +259,24 @@ namespace Comqueror.Properties {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die A hex number must have two digits! ähnelt.
+        /// </summary>
+        public static string Error_HexNumberTooLong {
+            get {
+                return ResourceManager.GetString("Error_HexNumberTooLong", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die {0} is not a valid hex number! ähnelt.
+        /// </summary>
+        public static string Error_InvalidHexNumber {
+            get {
+                return ResourceManager.GetString("Error_InvalidHexNumber", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die {0} Baud ähnelt.
         /// </summary>
         public static string Format_Baud {
@@ -250,6 +313,15 @@ namespace Comqueror.Properties {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Send ähnelt.
+        /// </summary>
+        public static string Group_Header_Send {
+            get {
+                return ResourceManager.GetString("Group_Header_Send", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die Message ähnelt.
         /// </summary>
         public static string Header_Column_Message {
@@ -277,6 +349,24 @@ namespace Comqueror.Properties {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Append \r ähnelt.
+        /// </summary>
+        public static string Label_Append_CarriageReturn {
+            get {
+                return ResourceManager.GetString("Label_Append_CarriageReturn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Append \n ähnelt.
+        /// </summary>
+        public static string Label_Append_Newline {
+            get {
+                return ResourceManager.GetString("Label_Append_Newline", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die Baudrate: ähnelt.
         /// </summary>
         public static string Label_Baudrate {
@@ -300,6 +390,24 @@ namespace Comqueror.Properties {
         public static string Label_Handshake {
             get {
                 return ResourceManager.GetString("Label_Handshake", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Message: ähnelt.
+        /// </summary>
+        public static string Label_Message {
+            get {
+                return ResourceManager.GetString("Label_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Message type: ähnelt.
+        /// </summary>
+        public static string Label_MessageType {
+            get {
+                return ResourceManager.GetString("Label_MessageType", resourceCulture);
             }
         }
         
