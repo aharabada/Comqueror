@@ -163,12 +163,6 @@
   <data name="Label_Status" xml:space="preserve">
     <value>Status:</value>
   </data>
-  <data name="Status_Connected" xml:space="preserve">
-    <value>Verbunden</value>
-  </data>
-  <data name="Status_Disconnected" xml:space="preserve">
-    <value>Getrennt</value>
-  </data>
   <data name="Header_Column_Message" xml:space="preserve">
     <value>Nachricht</value>
   </data>
@@ -237,5 +231,20 @@
   </data>
   <data name="Enum_Parity.Space" xml:space="preserve">
     <value>Space (0)</value>
+  </data>
+  <data name="Enum_ConnectionState.Disconnected" xml:space="preserve">
+    <value>Getrennt</value>
+  </data>
+  <data name="Enum_ConnectionState.Connecting" xml:space="preserve">
+    <value>Verbinde...</value>
+  </data>
+  <data name="Enum_ConnectionState.Connected" xml:space="preserve">
+    <value>Verbunden</value>
+  </data>
+  <data name="Enum_ConnectionState.Disconnecting" xml:space="preserve">
+    <value>Trenne...</value>
+  </data>
+  <data name="Enum_ConnectionState.Reconnecting" xml:space="preserve">
+    <value>Wiederverbinden...</value>
   </data>
 </root>

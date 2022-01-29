@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:Comqueror"
         xmlns:views="clr-namespace:Comqueror.Views"
         xmlns:p="clr-namespace:Comqueror.Properties"
+        xmlns:Comqueror="clr-namespace:Comqueror"
         mc:Ignorable="d"
         Title="{x:Static p:Strings.MainWindow_Title}" Height="450" Width="800"
         DataContext="{StaticResource MainViewModel}">
@@ -24,7 +25,7 @@
             <views:ComConnectionView DataContext="{Binding HostComConnectionViewModel}" 
                                      ConnectCommand="{Binding DataContext.ConnectHostCommand, 
                 RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:MainWindow}}}"
-                                     IsConnected="{Binding DataContext.IsHostConnected, 
+                                     ConnectionState="{Binding DataContext.HostConnectionState, 
                 RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:MainWindow}}}"/>
         </GroupBox>
 
@@ -34,8 +35,8 @@
                     <Style.Triggers>
                         <MultiDataTrigger>
                             <MultiDataTrigger.Conditions>
-                                <Condition Binding="{Binding IsHostConnected}" Value="True" />
-                                <Condition Binding="{Binding IsDeviceConnected}" Value="True" />
+                                <Condition Binding="{Binding HostConnectionState}" Value="{x:Static Comqueror:ConnectionState.Connected}" />
+                                <Condition Binding="{Binding DeviceConnectionState}" Value="{x:Static Comqueror:ConnectionState.Connected}" />
                             </MultiDataTrigger.Conditions>
                             <Setter Property="IsEnabled" Value="True"/>
                         </MultiDataTrigger>
@@ -52,7 +53,7 @@
             <views:ComConnectionView DataContext="{Binding DeviceComConnectionViewModel}" 
                                      ConnectCommand="{Binding DataContext.ConnectDeviceCommand, 
                 RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:MainWindow}}}"
-                                     IsConnected="{Binding DataContext.IsDeviceConnected, 
+                                     ConnectionState="{Binding DataContext.DeviceConnectionState, 
                 RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:MainWindow}}}"/>
         </GroupBox>
 

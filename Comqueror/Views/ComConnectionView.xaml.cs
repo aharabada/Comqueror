@@ -35,16 +35,16 @@ public partial class ComConnectionView : UserControl
         set => SetValue(ConnectCommandProperty, value);
     }
 
-    public static readonly DependencyProperty IsConnectedProperty =
+    public static readonly DependencyProperty ConnectionStateProperty =
         DependencyProperty.Register(
-            nameof(IsConnected),
-            typeof(bool),
+            nameof(ConnectionState),
+            typeof(ConnectionState),
             typeof(ComConnectionView),
             new UIPropertyMetadata(null));
-    public bool IsConnected
+    public ConnectionState ConnectionState
     {
-        get => (bool)GetValue(IsConnectedProperty);
-        set => SetValue(IsConnectedProperty, value);
+        get => (ConnectionState)GetValue(ConnectionStateProperty);
+        set => SetValue(ConnectionStateProperty, value);
     }
 
     public ComConnectionView()

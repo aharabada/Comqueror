@@ -51,8 +51,6 @@ public class ComConnectionViewModel : PropertyNotifier
 
     private ComPortModel? _comPortSettings;
 
-    //private bool _isConnected;
-
     public ComPortModel? ComPortSettings
     {
         get => _comPortSettings;
@@ -71,26 +69,9 @@ public class ComConnectionViewModel : PropertyNotifier
         set => SetIfChanged(ref _baudRates, value);
     }
 
-    //public bool IsConnected
-    //{
-    //    get => _isConnected;
-    //    set => SetIfChanged(ref _isConnected, value);
-    //}
-
     private RelayCommand? _updateComPortsCommand;
 
     public RelayCommand UpdateComPortsCommand => _updateComPortsCommand ??= new(o => UpdateComPorts());
-
-    //private RelayCommand? _connectCommand;
-
-    ///// <summary>
-    ///// The command that will be invoked when the Connect-Button is pressed
-    ///// </summary>
-    //public RelayCommand? ConnectCommand
-    //{
-    //    get => _connectCommand;
-    //    set => SetIfChanged(ref _connectCommand, value);
-    //}
 
     public ComConnectionViewModel()
     {

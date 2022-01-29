@@ -22,7 +22,7 @@ public class MainWindowViewModel : PropertyNotifier
 
     private readonly MessageLogViewModel _messageLogViewModel = new();
 
-    private bool _isHostConnected, _isDeviceConnected;
+    private ConnectionState _hostConnectionState, _deviceConnectionState;
 
     private bool _forwardHostToDevice;
     private bool _forwardDeviceToHost;
@@ -32,16 +32,16 @@ public class MainWindowViewModel : PropertyNotifier
 
     public MessageLogViewModel MessageLogViewModel => _messageLogViewModel;
 
-    public bool IsHostConnected
+    public ConnectionState HostConnectionState
     {
-        get => _isHostConnected;
-        set => SetIfChanged(ref _isHostConnected, value);
+        get => _hostConnectionState;
+        set => SetIfChanged(ref _hostConnectionState, value);
     }
 
-    public bool IsDeviceConnected
+    public ConnectionState DeviceConnectionState
     {
-        get => _isDeviceConnected;
-        set => SetIfChanged(ref _isDeviceConnected, value);
+        get => _deviceConnectionState;
+        set => SetIfChanged(ref _deviceConnectionState, value);
     }
 
     public bool ForwardHostToDevice
@@ -88,26 +88,6 @@ public class MainWindowViewModel : PropertyNotifier
     public RelayCommand ConnectHostCommand => _connectHostCommand ??=
         new(async (o) => await ConnectOrDisconnectHost());
 
-    private async Task ConnectOrDisconnectHost(bool showErrors = true)
-    {
-        if (IsDeviceConnected)
-        {
-            await DisconnectAsync(_hostComPortStream);
-            _hostComPortStream = null;
-        }
-        else
-        {
-            _hostComPortStream = new SerialPortStream();
-
-            if (await ConnectAsync(_hostComPortSettings, _hostComPortStream, showErrors))
-            {
-                IsDeviceConnected = true;
-            }
-
-            RegisterHostPortEvents(_hostComPortStream);
-        }
-    }
-
     private static async Task DisconnectAsync(SerialPortStream? port)
     {
         if (port == null)
@@ -121,22 +101,95 @@ public class MainWindowViewModel : PropertyNotifier
         new(async (o) => await ConnectOrDisconnectDevice());
     private async Task ConnectOrDisconnectDevice(bool showErrors = true)
     {
-        if (IsDeviceConnected)
+        if (DeviceConnectionState != ConnectionState.Disconnected)
         {
-            await DisconnectAsync(_deviceComPortStream);
-            _deviceComPortStream = null;
+            await DisconnectDevice();
         }
         else
         {
-            _deviceComPortStream = new SerialPortStream();
-            if (await ConnectAsync(_deviceComPortSettings, _deviceComPortStream, showErrors))
-            {
-                IsDeviceConnected = true;
-            }
-
-            RegisterDevicePortEvents(_deviceComPortStream);
+            await ConnectDevice(showErrors);
         }
     }
+
+    private async Task DisconnectDevice()
+    {
+        DeviceConnectionState = ConnectionState.Diconnecting;
+
+        await DisconnectAsync(_deviceComPortStream);
+        _deviceComPortStream = null;
+
+        DeviceConnectionState = ConnectionState.Disconnected;
+    }
+
+    private async Task<bool> ConnectDevice(bool showErrors)
+    {
+        if (DeviceConnectionState != ConnectionState.Reconnecting)
+            DeviceConnectionState = ConnectionState.Connecting;
+
+        _deviceComPortStream = new SerialPortStream();
+        if (await ConnectAsync(_deviceComPortSettings, _deviceComPortStream, showErrors))
+        {
+            RegisterDevicePortEvents(_deviceComPortStream);
+
+            DeviceConnectionState = ConnectionState.Connected;
+
+            return true;
+        }
+        else
+        {
+            if (DeviceConnectionState != ConnectionState.Reconnecting)
+                DeviceConnectionState = ConnectionState.Disconnected;
+
+            return false;
+        }
+    }
+
+    private async Task ConnectOrDisconnectHost(bool showErrors = true)
+    {
+        if (HostConnectionState != ConnectionState.Disconnected)
+        {
+            await DisconnectHost();
+        }
+        else
+        {
+            await ConnectHost(showErrors);
+        }
+    }
+
+    private async Task DisconnectHost()
+    {
+        HostConnectionState = ConnectionState.Diconnecting;
+
+        await DisconnectAsync(_hostComPortStream);
+        _hostComPortStream = null;
+
+        HostConnectionState = ConnectionState.Disconnected;
+    }
+
+    private async Task<bool> ConnectHost(bool showErrors)
+    {
+        if (HostConnectionState != ConnectionState.Reconnecting)
+            HostConnectionState = ConnectionState.Connecting;
+
+        _hostComPortStream = new SerialPortStream();
+
+        if (await ConnectAsync(_hostComPortSettings, _hostComPortStream, showErrors))
+        {
+            RegisterHostPortEvents(_hostComPortStream);
+
+            HostConnectionState = ConnectionState.Connected;
+
+            return true;
+        }
+        else
+        {
+            if (HostConnectionState != ConnectionState.Reconnecting)
+                HostConnectionState = ConnectionState.Disconnected;
+
+            return false;
+        }
+    }
+
 
     public RelayCommand SendMessageCommand => _sendMessageCommand ??=
         new(async o => await SendMessageAsync(o));
@@ -316,61 +369,79 @@ public class MainWindowViewModel : PropertyNotifier
     bool tryReconnectDevice = false;
     bool tryReconnectHost = false;
 
+    int _deviceReconnectAttempts = 0;
+    int _hostReconnectAttempts = 0;
+
+    public int DeviceReconnectAttempts
+    {
+        get => _deviceReconnectAttempts;
+        set => SetIfChanged(ref _deviceReconnectAttempts, value);
+    }
+    public int HostReconnectAttempts
+    {
+        get => _hostReconnectAttempts;
+        set => SetIfChanged(ref _hostReconnectAttempts, value);
+    }
+
     private async Task CheckComPorts(object? s, EventArgs e)
     {
-        if (IsDeviceConnected && _deviceComPortStream?.IsOpen != true)
+        if (!tryReconnectDevice && DeviceConnectionState != ConnectionState.Disconnected && _deviceComPortStream?.IsOpen != true)
         {
             try
             {
-                await ConnectOrDisconnectDevice();
+                await DisconnectDevice();
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
 
-            IsDeviceConnected = false;
-
             tryReconnectDevice = AutomaticReconnect;
+            DeviceReconnectAttempts = 0;
         }
 
         if (tryReconnectDevice)
         {
-            if (IsDeviceConnected)
+            if (DeviceConnectionState == ConnectionState.Connected)
             {
                 tryReconnectDevice = false;
             }
             else
             {
-                await ConnectOrDisconnectDevice(false);
+                DeviceReconnectAttempts++;
+                DeviceConnectionState = ConnectionState.Reconnecting;
+
+                await ConnectDevice(false);
             }
         }
 
-        if (IsHostConnected && _hostComPortStream?.IsOpen != true)
+        if (!tryReconnectHost && HostConnectionState != ConnectionState.Disconnected && _hostComPortStream?.IsOpen != true)
         {
             try
             {
-                await ConnectOrDisconnectHost();
+                await DisconnectHost();
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
 
-            IsHostConnected = false;
-
             tryReconnectHost = AutomaticReconnect;
+            HostReconnectAttempts = 0;
         }
 
         if (tryReconnectHost)
         {
-            if (IsHostConnected)
+            if (HostConnectionState == ConnectionState.Connected)
             {
                 tryReconnectHost = false;
             }
             else
             {
-                await ConnectOrDisconnectHost(false);
+                HostReconnectAttempts++;
+                HostConnectionState = ConnectionState.Reconnecting;
+
+                await ConnectHost(false);
             }
         }
     }

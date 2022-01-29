@@ -124,6 +124,51 @@ namespace Comqueror.Properties {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Connected ähnelt.
+        /// </summary>
+        public static string Enum_ConnectionState_Connected {
+            get {
+                return ResourceManager.GetString("Enum_ConnectionState.Connected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Connecting... ähnelt.
+        /// </summary>
+        public static string Enum_ConnectionState_Connecting {
+            get {
+                return ResourceManager.GetString("Enum_ConnectionState.Connecting", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Disconnected ähnelt.
+        /// </summary>
+        public static string Enum_ConnectionState_Disconnected {
+            get {
+                return ResourceManager.GetString("Enum_ConnectionState.Disconnected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Disconnecting... ähnelt.
+        /// </summary>
+        public static string Enum_ConnectionState_Disconnecting {
+            get {
+                return ResourceManager.GetString("Enum_ConnectionState.Disconnecting", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Reconnecting... ähnelt.
+        /// </summary>
+        public static string Enum_ConnectionState_Reconnecting {
+            get {
+                return ResourceManager.GetString("Enum_ConnectionState.Reconnecting", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die None ähnelt.
         /// </summary>
         public static string Enum_Handshake_None {
@@ -462,24 +507,6 @@ namespace Comqueror.Properties {
         public static string MainWindow_Title {
             get {
                 return ResourceManager.GetString("MainWindow_Title", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Connected ähnelt.
-        /// </summary>
-        public static string Status_Connected {
-            get {
-                return ResourceManager.GetString("Status_Connected", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Disconnected ähnelt.
-        /// </summary>
-        public static string Status_Disconnected {
-            get {
-                return ResourceManager.GetString("Status_Disconnected", resourceCulture);
             }
         }
     }

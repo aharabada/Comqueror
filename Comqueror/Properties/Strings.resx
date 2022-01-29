@@ -204,12 +204,6 @@
   <data name="Label_Status" xml:space="preserve">
     <value>Status:</value>
   </data>
-  <data name="Status_Connected" xml:space="preserve">
-    <value>Connected</value>
-  </data>
-  <data name="Status_Disconnected" xml:space="preserve">
-    <value>Disconnected</value>
-  </data>
   <data name="Header_Column_Message" xml:space="preserve">
     <value>Message</value>
   </data>
@@ -263,5 +257,20 @@
   </data>
   <data name="Error_NotConnected" xml:space="preserve">
     <value>You have to connect to a com port before sending data.</value>
+  </data>
+  <data name="Enum_ConnectionState.Disconnected" xml:space="preserve">
+    <value>Disconnected</value>
+  </data>
+  <data name="Enum_ConnectionState.Connecting" xml:space="preserve">
+    <value>Connecting...</value>
+  </data>
+  <data name="Enum_ConnectionState.Connected" xml:space="preserve">
+    <value>Connected</value>
+  </data>
+  <data name="Enum_ConnectionState.Disconnecting" xml:space="preserve">
+    <value>Disconnecting...</value>
+  </data>
+  <data name="Enum_ConnectionState.Reconnecting" xml:space="preserve">
+    <value>Reconnecting...</value>
   </data>
 </root>
