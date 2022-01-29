@@ -245,7 +245,7 @@ public class MainWindowViewModel : PropertyNotifier
                         return;
                     }
 
-                    if (byte.TryParse(split, out data[i]))
+                    if (!byte.TryParse(split, System.Globalization.NumberStyles.HexNumber, null, out data[i]))
                     {
                         string error = string.Format(Strings.Error_InvalidHexNumber, split);
 
