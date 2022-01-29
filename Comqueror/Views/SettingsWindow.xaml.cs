@@ -1,5 +1,4 @@
-﻿using Comqueror.Views;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,23 +10,16 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Comqueror;
+namespace Comqueror.Views;
 /// <summary>
-/// Interaction logic for MainWindow.xaml
+/// Interaktionslogik für SettingsWindow.xaml
 /// </summary>
-public partial class MainWindow : Window
+public partial class SettingsWindow : Window
 {
-    public MainWindow()
+    public SettingsWindow()
     {
         InitializeComponent();
-    }
-
-    private void OpenSettings_Click(object sender, RoutedEventArgs e)
-    {
-        SettingsWindow settingsWindow = new SettingsWindow();
-        settingsWindow.ShowDialog();
     }
 }

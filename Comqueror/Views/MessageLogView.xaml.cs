@@ -1,4 +1,5 @@
-﻿using Comqueror.ViewModels;
+﻿using Comqueror.Properties;
+using Comqueror.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -35,6 +36,8 @@ public partial class MessageLogView : UserControl
     public MessageLogView()
     {
         InitializeComponent();
+
+        //CbAutoScroll.IsChecked = Settings.Default.Log_AutoScroll;
 
         //if (DataContext is MessageLogViewModel viewModel)
         //    _viewModel = viewModel;

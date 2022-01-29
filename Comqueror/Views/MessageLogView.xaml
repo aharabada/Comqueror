@@ -97,7 +97,7 @@
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate DataType="{x:Type viewModels:MessageViewModel}">
                             <StackPanel>
-                                <TextBox Text="{Binding AsciiMessage}" FontFamily="{StaticResource CascadiaMono}" Typography.StylisticSet20="{Binding Path=Log_UseStylisticSet, Source={x:Static p:Settings.Default}}" UndoLimit="0">
+                                <TextBox Text="{Binding AsciiMessage}" FontFamily="{StaticResource CascadiaMono}" Typography.StylisticSet20="{Binding Path=Log_UseStylisticSet, Source={x:Static p:Settings.Default}, Mode=OneWay}" UndoLimit="0">
                                     <TextBox.Style>
                                         <Style TargetType="{x:Type TextBox}">
                                             <Setter Property="IsReadOnly" Value="True" />

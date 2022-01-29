@@ -178,5 +178,17 @@ namespace Comqueror.Properties {
                 this["Log_UseStylisticSet"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool Log_AutoScroll {
+            get {
+                return ((bool)(this["Log_AutoScroll"]));
+            }
+            set {
+                this["Log_AutoScroll"] = value;
+            }
+        }
     }
 }

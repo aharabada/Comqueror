@@ -273,4 +273,22 @@
   <data name="Enum_ConnectionState.Reconnecting" xml:space="preserve">
     <value>Reconnecting...</value>
   </data>
+  <data name="SettingsWindow_Title" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  <data name="Group_Header_Log_Settings" xml:space="preserve">
+    <value>Log</value>
+  </data>
+  <data name="Label_UseAlternativeControlSymbols" xml:space="preserve">
+    <value>Use alternative control symbols</value>
+  </data>
+  <data name="Button_Save" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="Button_Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="Button_Settings" xml:space="preserve">
+    <value>Settings</value>
+  </data>
 </root>

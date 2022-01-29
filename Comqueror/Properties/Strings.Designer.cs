@@ -61,6 +61,15 @@ namespace Comqueror.Properties {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Cancel ähnelt.
+        /// </summary>
+        public static string Button_Cancel {
+            get {
+                return ResourceManager.GetString("Button_Cancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die Clear Log ähnelt.
         /// </summary>
         public static string Button_ClearLog {
@@ -88,6 +97,15 @@ namespace Comqueror.Properties {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Save ähnelt.
+        /// </summary>
+        public static string Button_Save {
+            get {
+                return ResourceManager.GetString("Button_Save", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die Send ähnelt.
         /// </summary>
         public static string Button_Send {
@@ -111,6 +129,15 @@ namespace Comqueror.Properties {
         public static string Button_Send_LF {
             get {
                 return ResourceManager.GetString("Button_Send_LF", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Settings ähnelt.
+        /// </summary>
+        public static string Button_Settings {
+            get {
+                return ResourceManager.GetString("Button_Settings", resourceCulture);
             }
         }
         
@@ -349,6 +376,15 @@ namespace Comqueror.Properties {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Log ähnelt.
+        /// </summary>
+        public static string Group_Header_Log_Settings {
+            get {
+                return ResourceManager.GetString("Group_Header_Log_Settings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die Messages ähnelt.
         /// </summary>
         public static string Group_Header_Messages {
@@ -502,11 +538,29 @@ namespace Comqueror.Properties {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Use alternative control symbols ähnelt.
+        /// </summary>
+        public static string Label_UseAlternativeControlSymbols {
+            get {
+                return ResourceManager.GetString("Label_UseAlternativeControlSymbols", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die Comqueror ähnelt.
         /// </summary>
         public static string MainWindow_Title {
             get {
                 return ResourceManager.GetString("MainWindow_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Settings ähnelt.
+        /// </summary>
+        public static string SettingsWindow_Title {
+            get {
+                return ResourceManager.GetString("SettingsWindow_Title", resourceCulture);
             }
         }
     }

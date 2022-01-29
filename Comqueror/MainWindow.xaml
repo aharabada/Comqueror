@@ -18,9 +18,13 @@
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <GroupBox Grid.Column="0" Grid.Row="0"
+
+        <Button Margin="5" Content="{x:Static p:Strings.Button_Settings}" HorizontalAlignment="Left" Click="OpenSettings_Click" />
+
+        <GroupBox Grid.Column="0" Grid.Row="1"
                   Header="{x:Static p:Strings.Group_Header_PcHostConnection}">
             <views:ComConnectionView DataContext="{Binding HostComConnectionViewModel}" 
                                      ConnectCommand="{Binding DataContext.ConnectHostCommand, 
@@ -29,7 +33,7 @@
                 RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:MainWindow}}}"/>
         </GroupBox>
 
-        <StackPanel Grid.Column="1" Grid.Row="0" Margin="5" VerticalAlignment="Center">
+        <StackPanel Grid.Column="1" Grid.Row="1" Margin="5" VerticalAlignment="Center">
             <StackPanel.Style>
                 <Style TargetType="{x:Type StackPanel}">
                     <Style.Triggers>
@@ -48,7 +52,7 @@
             <CheckBox Margin="5" Content="&lt;&lt;&lt;FWD" IsChecked="{Binding ForwardDeviceToHost}"/>
         </StackPanel>
         
-        <GroupBox Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="0"
+        <GroupBox Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="1"
                   Header="{x:Static p:Strings.Group_Header_DeviceConnection}">
             <views:ComConnectionView DataContext="{Binding DeviceComConnectionViewModel}" 
                                      ConnectCommand="{Binding DataContext.ConnectDeviceCommand, 
@@ -57,7 +61,7 @@
                 RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:MainWindow}}}"/>
         </GroupBox>
 
-        <Grid Grid.ColumnSpan="3" Grid.Row="1">
+        <Grid Grid.ColumnSpan="3" Grid.Row="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="3*" />
                 <ColumnDefinition Width="5" />
