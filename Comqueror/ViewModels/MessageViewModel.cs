@@ -50,6 +50,11 @@ public class MessageViewModel : PropertyNotifier
         return stringBuilder.ToString();
     }
 
+    /// <summary>
+    /// First visible control symbol
+    /// </summary>
+    private const char NullSymbol = '␀';
+
     private void FormatAscii(StringBuilder stringBuilder, int bytesPerRow)
     {
         if (_messageModel.Data == null)
@@ -59,7 +64,17 @@ public class MessageViewModel : PropertyNotifier
 
         foreach (byte b in _messageModel.Data)
         {
-            stringBuilder.Append((char)b);
+            char c = (char)b;
+
+            if (char.IsControl(c))
+            {
+                // Offset control chars to make them visible
+                stringBuilder.Append((char)(NullSymbol + c));
+            }
+            else
+            {
+                stringBuilder.Append(c);
+            }
 
             if (++i == bytesPerRow)
             {

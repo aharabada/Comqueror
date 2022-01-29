@@ -166,5 +166,17 @@ namespace Comqueror.Properties {
                 this["DeviceComConnection_LastHandshake"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool Log_UseStylisticSet {
+            get {
+                return ((bool)(this["Log_UseStylisticSet"]));
+            }
+            set {
+                this["Log_UseStylisticSet"] = value;
+            }
+        }
     }
 }

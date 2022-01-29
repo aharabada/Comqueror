@@ -13,6 +13,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Fonts\CascadiaMono.ttf" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Update="Properties\Settings.Designer.cs">
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <AutoGen>True</AutoGen>

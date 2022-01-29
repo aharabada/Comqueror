@@ -8,3 +8,6 @@ Have you ever wanted to log and examine the data that two devices exchange via t
 - Open two serial connections simultaneously and forward data from one to the other
 - Automatically detect lost connections and reconnect
 - Bugs and Crashes
+
+## Credits
+- [Cascadia Code](https://github.com/microsoft/cascadia-code)

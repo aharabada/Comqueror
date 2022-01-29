@@ -59,13 +59,13 @@
                             <Grid Width="auto">
                                 <Rectangle Width="auto" SizeChanged="MessageHeaderSizeChanged"
                                            HorizontalAlignment="Stretch" Loaded="HexHeaderRectLoaded" />
-                                <TextBlock FontFamily="Consolas" Loaded="HexHeaderTextBlockLoaded"/>
+                                <TextBlock FontFamily="{StaticResource CascadiaMono}" Loaded="HexHeaderTextBlockLoaded"/>
                             </Grid>
                         </DataTemplate>
                     </DataGridTemplateColumn.HeaderTemplate>
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate DataType="{x:Type viewModels:MessageViewModel}">
-                            <TextBox Text="{Binding HexMessage}" FontFamily="Consolas" UndoLimit="0" SelectionChanged="TxtBla" AutoWordSelection="True">
+                            <TextBox Text="{Binding HexMessage}" FontFamily="{StaticResource CascadiaMono}" UndoLimit="0" SelectionChanged="TxtBla" AutoWordSelection="True">
                                 <TextBox.Style>
                                     <Style TargetType="{x:Type TextBox}">
                                         <Setter Property="IsReadOnly" Value="True" />
@@ -90,14 +90,14 @@
                             <Grid Width="auto">
                                 <Rectangle Width="auto" SizeChanged="MessageHeaderSizeChanged"
                                            HorizontalAlignment="Stretch" Loaded="AsciiHeaderRectLoaded"/>
-                                <TextBlock FontFamily="Consolas" Loaded="AsciiHeaderTextBlockLoaded"/>
+                                <TextBlock FontFamily="{StaticResource CascadiaMono}" Loaded="AsciiHeaderTextBlockLoaded"/>
                             </Grid>
                         </DataTemplate>
                     </DataGridTemplateColumn.HeaderTemplate>
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate DataType="{x:Type viewModels:MessageViewModel}">
                             <StackPanel>
-                                <TextBox Text="{Binding AsciiMessage}" FontFamily="Consolas" UndoLimit="0">
+                                <TextBox Text="{Binding AsciiMessage}" FontFamily="{StaticResource CascadiaMono}" Typography.StylisticSet20="{Binding Path=Log_UseStylisticSet, Source={x:Static p:Settings.Default}}" UndoLimit="0">
                                     <TextBox.Style>
                                         <Style TargetType="{x:Type TextBox}">
                                             <Setter Property="IsReadOnly" Value="True" />

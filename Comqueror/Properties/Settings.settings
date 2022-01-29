@@ -38,5 +38,8 @@
     <Setting Name="DeviceComConnection_LastHandshake" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
+    <Setting Name="Log_UseStylisticSet" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
