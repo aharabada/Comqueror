@@ -4,6 +4,7 @@
              xmlns:local="clr-namespace:Comqueror"
              xmlns:viewModels="clr-namespace:Comqueror.ViewModels"
              xmlns:util="clr-namespace:Comqueror.Utility"
+             Startup="Application_Startup"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
         <ResourceDictionary>

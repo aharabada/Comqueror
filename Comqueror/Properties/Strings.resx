@@ -291,4 +291,10 @@
   <data name="Button_Settings" xml:space="preserve">
     <value>Settings</value>
   </data>
+  <data name="Language_de-DE" xml:space="preserve">
+    <value>German</value>
+  </data>
+  <data name="Language_en-US" xml:space="preserve">
+    <value>English (US)</value>
+  </data>
 </root>

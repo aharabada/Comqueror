@@ -14,17 +14,24 @@
     <Window.DataContext>
         <viewModels:SettingsViewModel />
     </Window.DataContext>
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition />
-            <RowDefinition />
-        </Grid.RowDefinitions>
-        <GroupBox Grid.Row="0" Header="{x:Static prop:Strings.Group_Header_Log_Settings}">
+    <StackPanel>
+        <GroupBox Header="{x:Static prop:Strings.Group_Header_Log_Settings}">
             <DockPanel>
                 <CheckBox IsChecked="{Binding UseStylisticSet}"
                     Content="{x:Static prop:Strings.Label_UseAlternativeControlSymbols}"/>
             </DockPanel>
         </GroupBox>
-        <Button Grid.Row="1" x:Name="BtnSave" HorizontalAlignment="Center" Margin="5" Content="{x:Static prop:Strings.Button_Save}" Command="{Binding SaveSettings}"/>
-    </Grid>
+        <StackPanel Margin="5" Orientation="Horizontal">
+            <TextBlock Text="Language: " />
+            <ComboBox SelectedItem="{Binding Language}" ItemsSource="{Binding Languages}">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate DataType="{x:Type viewModels:LanguageItem}">
+                        <TextBlock Text="{Binding LocalizedName}" />
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+        </StackPanel>
+        <Button x:Name="BtnSave" HorizontalAlignment="Center" Margin="5" Content="{x:Static prop:Strings.Button_Save}" Command="{Binding SaveSettings}"
+                IsEnabled="{Binding SettingsChanged}"/>
+    </StackPanel>
 </Window>

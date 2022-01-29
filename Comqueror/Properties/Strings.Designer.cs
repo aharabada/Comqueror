@@ -547,6 +547,24 @@ namespace Comqueror.Properties {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die German ähnelt.
+        /// </summary>
+        public static string Language_de_DE {
+            get {
+                return ResourceManager.GetString("Language_de-DE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die English (US) ähnelt.
+        /// </summary>
+        public static string Language_en_US {
+            get {
+                return ResourceManager.GetString("Language_en-US", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die Comqueror ähnelt.
         /// </summary>
         public static string MainWindow_Title {
